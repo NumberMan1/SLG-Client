@@ -1,0 +1,96 @@
+name: Client CI
+
+on:
+  push:
+    branches: [develop, master]
+  pull_request:
+    branches: [develop, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: client-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-project:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Check Unity package files and startup scene
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          manifest = json.loads(Path("Packages/manifest.json").read_text())["dependencies"]
+          locked = json.loads(Path("Packages/packages-lock.json").read_text())["dependencies"]
+          for name, version in manifest.items():
+              if locked.get(name, {}).get("version") != version:
+                  raise SystemExit(f"Manifest and lock file disagree for {name}")
+
+          for asset in Path("Assets").rglob("*"):
+              if asset.name.endswith(".meta"):
+                  continue
+              if not asset.with_name(asset.name + ".meta").is_file():
+                  raise SystemExit(f"Missing Unity metadata for {asset}")
+
+          scene = Path("Assets/Scenes/Frontier.unity")
+          if not scene.is_file():
+              raise SystemExit(f"Missing startup scene {scene}")
+          metadata = scene.with_suffix(".unity.meta").read_text()
+          guid = re.search(r"(?m)^guid: ([0-9a-f]{32})$", metadata)
+          settings = Path("ProjectSettings/EditorBuildSettings.asset").read_text()
+          entry = rf"(?m)^  - enabled: 1\n    path: {re.escape(scene.as_posix())}\n    guid: "
+          if guid is None or re.search(entry + guid[1] + "$", settings) is None:
+              raise SystemExit("Frontier must be enabled in build settings with the correct scene GUID")
+          PY
+
+  build-windows:
+    needs: validate-project
+    if: vars.SLG_GAMECI_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - name: Check Unity license configuration
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: |
+          if [ -z "$UNITY_LICENSE" ] || [ -z "$UNITY_EMAIL" ] || [ -z "$UNITY_PASSWORD" ]; then
+            echo "::error::Set UNITY_LICENSE, UNITY_EMAIL and UNITY_PASSWORD in the repository Actions secrets."
+            exit 1
+          fi
+
+      - name: Build Frontier for Windows
+        uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: auto
+          targetPlatform: StandaloneWindows64
+          buildMethod: Slg.EditorTools.BuildCiPlayer.Build
+          buildName: Frontier
+          versioning: None
+
+      - name: Upload Windows development build
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: Frontier-Windows-x64
+          path: build/StandaloneWindows64/
+          if-no-files-found: error
+          retention-days: 7

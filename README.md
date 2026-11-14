@@ -42,3 +42,11 @@ $unityArgs = @('-batchmode', '-nographics', '-projectPath', ('"{0}"' -f $project
 $process = Start-Process -FilePath $editor -ArgumentList $unityArgs -WindowStyle Hidden -PassThru -Wait
 $process.ExitCode
 ```
+
+## GitHub Actions
+
+Client CI 在 `develop`、`master` 的推送和以这两个分支为目标的 PR 上运行，也支持手动运行。默认检查 Unity 包锁文件、资产的 `.meta` 和 Frontier 场景的构建配置。这些检查无需 Unity 许可证。
+
+如果 Unity Hub 在 Windows 上生成了 `%LOCALAPPDATA%\Unity\licenses\UnityEntitlementLicense.xml`，直接用同一 Windows 用户下已激活的 Unity 编辑器打包。打开 **File → Build Profiles**，选择 Windows，启用 **Development Build** 后点击 **Build**。也可以在上面的批处理命令里把 `-executeMethod` 换成 `Slg.EditorTools.BuildCiPlayer.Build`，追加 `-quit -buildTarget Win64 -customBuildPath <Frontier.exe 的完整路径>`。[Unity 许可证文件说明](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/licenses-and-activation/activation-faq)
+
+拿到 GameCI 支持的 `.ulf` 后，可在 **Settings → Secrets and variables → Actions** 设置 `UNITY_LICENSE`、`UNITY_EMAIL` 和 `UNITY_PASSWORD`，再到 **Variables** 新建 `SLG_GAMECI_ENABLED` 并设为 `true`。启用后 GameCI 会导入项目、编译脚本并构建 Windows x64 开发包，成功产物为 `Frontier-Windows-x64`。来自 fork 或 Dependabot 的 PR 仅运行项目检查。[GameCI 许可证配置](https://game.ci/docs/github/activation/)
