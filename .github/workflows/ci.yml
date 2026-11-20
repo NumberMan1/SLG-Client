@@ -54,6 +54,16 @@ jobs:
           PY
 
   build-windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: StandaloneWindows64
+            method: Slg.EditorTools.BuildCiPlayer.Build
+            artifact: Frontier-Windows-x64
+          - platform: WebGL
+            method: Slg.EditorTools.BuildCiPlayer.BuildWeb
+            artifact: Frontier-Web
     needs: validate-project
     if: vars.SLG_GAMECI_ENABLED == 'true' && github.actor != 'dependabot[bot]' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-24.04
@@ -74,7 +84,7 @@ jobs:
             exit 1
           fi
 
-      - name: Build Frontier for Windows
+      - name: Build Frontier player
         uses: game-ci/unity-builder@4423ee75828dff56037d1d1cfdac6b68e3a6ba00 # v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -82,15 +92,15 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: auto
-          targetPlatform: StandaloneWindows64
-          buildMethod: Slg.EditorTools.BuildCiPlayer.Build
+          targetPlatform: ${{ matrix.platform }}
+          buildMethod: ${{ matrix.method }}
           buildName: Frontier
           versioning: None
 
-      - name: Upload Windows development build
+      - name: Upload player build
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
-          name: Frontier-Windows-x64
-          path: build/StandaloneWindows64/
+          name: ${{ matrix.artifact }}
+          path: build/${{ matrix.platform }}/
           if-no-files-found: error
           retention-days: 7

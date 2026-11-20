@@ -5,7 +5,7 @@
 | 路径 | 职责 |
 | --- | --- |
 | `Assets/Scenes/Frontier.unity` | 3D 地形预览和登录演示 |
-| `Assets/Scripts/Networking` | HTTP 登录、TCP 认证和健康检查 |
+| `Assets/Scripts/Networking` | HTTP 登录、原生 TCP 和浏览器 WebSocket 认证及健康检查 |
 | `Assets/Scripts/Protocol` | 从 SLG-Server 的 `proto/session.proto` 生成的 C# 类型 |
 | `Assets/Plugins` | Protobuf 托管运行库与许可证 |
 | `Assets/Editor` | Unity 编辑器菜单与批处理冒烟入口 |
@@ -16,7 +16,17 @@
 
 打开 `Assets/Scenes/Frontier.unity`，点击 **Play**，在 **Game** 视图查看地形和登录面板。按 SLG-Server 的 README 在 Podman 中启动网关，再输入服务端配置的账号和密码并点击 **Sign in**。网关默认地址是 `http://127.0.0.1:8080`，账号默认是 `demo`。认证成功后界面显示服务端返回的会话 ID。此场景使用静态地形预览，支持主动断开连接，并会显示网关关闭连接的结果。若打包后通过本机明文 HTTP 联调，请构建 **Development Build**。
 
-作品集交付包含实际玩法演示视频与两个代码仓库的链接。[SLG-Client](https://github.com/NumberMan1/SLG-Client) · [SLG-Server](https://github.com/NumberMan1/SLG-Server)
+作品集以在线试玩网页作为主要入口，并提供实际玩法演示视频与两个代码仓库的链接。[SLG-Client](https://github.com/NumberMan1/SLG-Client) · [SLG-Server](https://github.com/NumberMan1/SLG-Server)
+
+## 浏览器试玩
+
+在 Unity Hub 为 `6000.3.27f1` 添加 **Web Build Support**。在编辑器选择 **SLG → Build Web Player** 并选择输出目录，或用批处理入口 `Slg.EditorTools.BuildCiPlayer.BuildWeb`，传入 `-buildTarget WebGL -customBuildPath <输出目录>`。构建使用未压缩的 Web 文件，方便普通静态文件服务器托管。
+
+网页启动后自动使用当前网页所在的域名和端口作为网关地址。HTTP 登录仍使用 `/v1/login`，浏览器通过 `/v1/session` 建立二进制 WebSocket，HTTPS 网页自动选择 WSS。每个 WebSocket 消息包含一个完整 Orbit 帧。
+
+本机可将网关的 `SLG_WEB_ROOT` 设置为 Web 构建目录，再通过网关 HTTP 地址打开试玩。部署时将 Web 静态文件、`/v1/login` 和 `/v1/session` 放在同一个 HTTPS 站点，反向代理需支持 WebSocket Upgrade 并保留原始 Host。浏览器连接遵循同源校验。
+
+目前场景展示地形预览和登录认证，后续地图交互、行军与战斗也会通过这条网页连接实现。在线试玩地址需在部署到公网托管环境后提供。
 
 ### 编辑器冒烟检查
 
@@ -49,4 +59,4 @@ Client CI 在 `develop`、`master` 的推送和以这两个分支为目标的 PR
 
 如果 Unity Hub 在 Windows 上生成了 `%LOCALAPPDATA%\Unity\licenses\UnityEntitlementLicense.xml`，直接用同一 Windows 用户下已激活的 Unity 编辑器打包。打开 **File → Build Profiles**，选择 Windows，启用 **Development Build** 后点击 **Build**。也可以在上面的批处理命令里把 `-executeMethod` 换成 `Slg.EditorTools.BuildCiPlayer.Build`，追加 `-quit -buildTarget Win64 -customBuildPath <Frontier.exe 的完整路径>`。[Unity 许可证文件说明](https://docs.unity.com/en-us/engine/6000.6/manual/get-started/install-and-upgrade/licenses-and-activation/activation-faq)
 
-拿到 GameCI 支持的 `.ulf` 后，可在 **Settings → Secrets and variables → Actions** 设置 `UNITY_LICENSE`、`UNITY_EMAIL` 和 `UNITY_PASSWORD`，再到 **Variables** 新建 `SLG_GAMECI_ENABLED` 并设为 `true`。启用后 GameCI 会导入项目、编译脚本并构建 Windows x64 开发包，成功产物为 `Frontier-Windows-x64`。来自 fork 或 Dependabot 的 PR 仅运行项目检查。[GameCI 许可证配置](https://game.ci/docs/github/activation/)
+拿到 GameCI 支持的 `.ulf` 后，可在 **Settings → Secrets and variables → Actions** 设置 `UNITY_LICENSE`、`UNITY_EMAIL` 和 `UNITY_PASSWORD`，再到 **Variables** 新建 `SLG_GAMECI_ENABLED` 并设为 `true`。启用后 GameCI 分别构建 Windows 和 Web 开发包，成功产物为 `Frontier-Windows-x64` 和 `Frontier-Web`。来自 fork 或 Dependabot 的 PR 仅运行项目检查。[GameCI 许可证配置](https://game.ci/docs/github/activation/)

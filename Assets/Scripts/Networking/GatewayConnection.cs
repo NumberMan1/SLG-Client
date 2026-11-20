@@ -1,7 +1,9 @@
 using System;
 using System.Buffers.Binary;
 using System.IO;
+#if !UNITY_WEBGL || UNITY_EDITOR
 using System.Net.Sockets;
+#endif
 using System.Threading;
 using System.Threading.Tasks;
 using Google.Protobuf;
@@ -10,16 +12,17 @@ using UnityEngine.Networking;
 
 namespace Slg.Networking
 {
-    public sealed class GatewayConnection : IDisposable
+    public sealed partial class GatewayConnection : IDisposable
     {
         private const int HeaderSize = 10;
         private const int MaxPayload = 1024;
         private const uint ProtocolVersion = 1;
         private const uint ConnectSequence = 1;
 
-        private readonly TcpClient tcp;
         public ConnectReply Session { get; }
 
+#if !UNITY_WEBGL || UNITY_EDITOR
+        private readonly TcpClient tcp;
         private GatewayConnection(TcpClient tcp, ConnectReply session)
         {
             this.tcp = tcp;
@@ -68,6 +71,7 @@ namespace Slg.Networking
             }
         }
 
+#endif
         private static async Task<LoginReply> RequestTicketAsync(Uri gateway, string account, string password)
         {
             var body = new LoginRequest { Account = account, Password = password }.ToByteArray();
@@ -90,6 +94,7 @@ namespace Slg.Networking
             return LoginReply.Parser.ParseFrom(request.downloadHandler.data);
         }
 
+#if !UNITY_WEBGL || UNITY_EDITOR
         private static async Task SendConnectAsync(NetworkStream stream, ConnectRequest request, CancellationToken token)
         {
             var payload = request.ToByteArray();
@@ -147,5 +152,6 @@ namespace Slg.Networking
         }
 
         public void Dispose() => tcp.Dispose();
+#endif
     }
 }

@@ -12,15 +12,42 @@ namespace Slg.EditorTools
     {
         public static void Build()
         {
+            BuildPlayer(BuildTarget.StandaloneWindows64);
+        }
+
+        [MenuItem("SLG/Build Web Player")]
+        public static void BuildWeb()
+        {
+            BuildPlayer(BuildTarget.WebGL);
+        }
+
+        private static void BuildPlayer(BuildTarget target)
+        {
+            if (!BuildPipeline.IsBuildTargetSupported(BuildPipeline.GetBuildTargetGroup(target), target))
+            {
+                throw new BuildFailedException($"Install {target} Build Support for this Unity editor in Unity Hub.");
+            }
             string[] args = Environment.GetCommandLineArgs();
             int pathIndex = Array.IndexOf(args, "-customBuildPath") + 1;
             if (pathIndex == 0 || pathIndex >= args.Length || string.IsNullOrWhiteSpace(args[pathIndex]))
             {
-                throw new BuildFailedException("Pass -customBuildPath with the Windows player output path.");
+                if (target == BuildTarget.WebGL && !Application.isBatchMode)
+                {
+                    string folder = EditorUtility.SaveFolderPanel("Build Web Player", "", "Frontier-Web");
+                    if (string.IsNullOrEmpty(folder)) return;
+                    BuildAtPath(target, folder);
+                    return;
+                }
+                throw new BuildFailedException("Pass -customBuildPath with the player output path.");
             }
 
             string path = Path.GetFullPath(args[pathIndex]);
-            if (!string.Equals(Path.GetExtension(path), ".exe", StringComparison.OrdinalIgnoreCase))
+            BuildAtPath(target, path);
+        }
+
+        private static void BuildAtPath(BuildTarget target, string path)
+        {
+            if (target == BuildTarget.StandaloneWindows64 && !string.Equals(Path.GetExtension(path), ".exe", StringComparison.OrdinalIgnoreCase))
             {
                 throw new BuildFailedException("The Windows player output path must end in .exe.");
             }
@@ -35,14 +62,26 @@ namespace Slg.EditorTools
             }
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));
-            BuildReport report = BuildPipeline.BuildPlayer(scenes, path,
-                BuildTarget.StandaloneWindows64, BuildOptions.Development);
+            var compression = PlayerSettings.WebGL.compressionFormat;
+            BuildReport report;
+            try
+            {
+                if (target == BuildTarget.WebGL)
+                {
+                    PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
+                }
+                report = BuildPipeline.BuildPlayer(scenes, path, target, BuildOptions.Development);
+            }
+            finally
+            {
+                PlayerSettings.WebGL.compressionFormat = compression;
+            }
             if (report.summary.result != BuildResult.Succeeded)
             {
-                throw new BuildFailedException($"Windows player build ended with {report.summary.result}.");
+                throw new BuildFailedException($"{target} player build ended with {report.summary.result}.");
             }
 
-            Debug.Log($"Built Windows development player at {path}.");
+            Debug.Log($"Built {target} development player at {path}.");
         }
     }
 }

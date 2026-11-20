@@ -32,7 +32,11 @@ namespace Slg
 
         private void Awake()
         {
+#if UNITY_WEBGL && !UNITY_EDITOR
+            gateway = new Uri(Application.absoluteURL).GetLeftPart(UriPartial.Authority);
+#else
             gateway = Environment.GetEnvironmentVariable("SLG_CLIENT_GATEWAY_URL") ?? gateway;
+#endif
             account = Environment.GetEnvironmentVariable("SLG_DEMO_ACCOUNT") ?? account;
         }
 
@@ -46,7 +50,7 @@ namespace Slg
             }
             busy = true;
             failed = false;
-            status = "Signing in and opening TCP session…";
+            status = "Signing in…";
             try
             {
                 var opened = await GatewayConnection.LoginAsync(gateway.Trim(), account.Trim(), password);
@@ -57,7 +61,7 @@ namespace Slg
                 }
                 connection = opened;
                 password = "";
-                status = "TCP authentication accepted";
+                status = "Connected";
                 WatchConnection(opened);
             }
             catch (Exception error)
@@ -117,7 +121,7 @@ namespace Slg
             GUI.Label(new Rect(x, y + 54, 400, 24), "SLG  /  CONNECTION DEMO", eyebrow);
             GUI.Label(new Rect(x - 3, y + 94, 450, 79), "Frontier", title);
             GUI.Label(new Rect(x, y + 188, 408, 51),
-                "Sign in to the game gateway and open a TCP session.", body);
+                "Sign in to explore Frontier.", body);
             Fill(new Rect(x, y + 248, 410, 1), new Color(0.23f, 0.30f, 0.30f));
 
             if (connection == null)
