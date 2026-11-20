@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Slg
 {
+    /// <summary>绘制登录界面，并在场景内管理网关会话及其状态提示。</summary>
     public sealed class LoginScene : MonoBehaviour
     {
         [SerializeField] private Font displayFont;
@@ -33,6 +34,7 @@ namespace Slg
         private void Awake()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
+            // 网页构建从当前页面取得网关地址，以便资源和协议请求共享同一来源。
             gateway = new Uri(Application.absoluteURL).GetLeftPart(UriPartial.Authority);
 #else
             gateway = Environment.GetEnvironmentVariable("SLG_CLIENT_GATEWAY_URL") ?? gateway;
@@ -54,6 +56,7 @@ namespace Slg
             try
             {
                 var opened = await GatewayConnection.LoginAsync(gateway.Trim(), account.Trim(), password);
+                // 等待登录时场景可能已被销毁，此时由回调关闭刚建立的连接。
                 if (!this)
                 {
                     opened.Dispose();
@@ -87,6 +90,7 @@ namespace Slg
             {
                 reason = error.Message;
             }
+            // 旧连接的关闭回调只能更新它所属的界面状态。
             if (this && ReferenceEquals(connection, opened))
             {
                 Disconnect();
@@ -108,6 +112,7 @@ namespace Slg
             {
                 CreateStyles();
             }
+            // 以 1280×720 为布局基准，等比缩放并垂直居中。
             float scale = Mathf.Min(Screen.width / 1280f, Screen.height / 720f);
             float width = Screen.width / scale;
             float height = Screen.height / scale;

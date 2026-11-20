@@ -12,13 +12,16 @@ using UnityEngine.Networking;
 
 namespace Slg.Networking
 {
+    /// <summary>持有通过网关认证的长连接，原生端使用 TCP，网页端使用 WebSocket。</summary>
     public sealed partial class GatewayConnection : IDisposable
     {
+        // Orbit 帧头包含负载长度、消息类型、序号和错误码，整数按大端序编码。
         private const int HeaderSize = 10;
         private const int MaxPayload = 1024;
         private const uint ProtocolVersion = 1;
         private const uint ConnectSequence = 1;
 
+        /// <summary>网关确认的账号及当前连接的会话编号。</summary>
         public ConnectReply Session { get; }
 
 #if !UNITY_WEBGL || UNITY_EDITOR
@@ -29,6 +32,7 @@ namespace Slg.Networking
             Session = session;
         }
 
+        /// <summary>通过 HTTP 获取登录票据，再用票据完成 TCP 握手。调用方负责释放返回的连接。</summary>
         public static async Task<GatewayConnection> LoginAsync(string gatewayUrl, string account, string password)
         {
             var gateway = new Uri(gatewayUrl, UriKind.Absolute);
@@ -45,6 +49,7 @@ namespace Slg.Networking
 
             var tcp = new TcpClient { NoDelay = true };
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            // 主动关闭套接字，使同一个时限覆盖 TCP 建连和认证收发。
             using var closeOnTimeout = timeout.Token.Register(tcp.Dispose);
             try
             {
@@ -74,6 +79,7 @@ namespace Slg.Networking
 #endif
         private static async Task<LoginReply> RequestTicketAsync(Uri gateway, string account, string password)
         {
+            // 原生端和网页端共用 HTTP 登录协议，凭据始终提交给指定的网关地址。
             var body = new LoginRequest { Account = account, Password = password }.ToByteArray();
             using var request = new UnityWebRequest(new Uri(gateway, "/v1/login").AbsoluteUri, "POST")
             {
@@ -129,6 +135,7 @@ namespace Slg.Networking
 
         private static async Task ReadExactlyAsync(NetworkStream stream, byte[] buffer, CancellationToken token)
         {
+            // TCP 读取可能只返回部分数据，凑齐所需字节后再解析帧。
             int offset = 0;
             while (offset < buffer.Length)
             {
@@ -141,6 +148,7 @@ namespace Slg.Networking
             }
         }
 
+        /// <summary>等待网关关闭连接。当前会话协议在认证后收到额外数据会报错。</summary>
         public async Task WaitForDisconnectAsync()
         {
             var buffer = new byte[1];
@@ -151,6 +159,7 @@ namespace Slg.Networking
             }
         }
 
+        /// <summary>关闭认证后的 TCP 连接。</summary>
         public void Dispose() => tcp.Dispose();
 #endif
     }

@@ -8,13 +8,16 @@ using UnityEngine;
 
 namespace Slg.EditorTools
 {
+    /// <summary>提供本地和 CI 共用的开发版客户端构建入口。</summary>
     public static class BuildCiPlayer
     {
+        /// <summary>从批处理入口构建 Windows 客户端，输出路径须以 .exe 结尾。</summary>
         public static void Build()
         {
             BuildPlayer(BuildTarget.StandaloneWindows64);
         }
 
+        /// <summary>构建 WebGL 客户端。批处理从参数读取输出目录，编辑器菜单会打开目录选择框。</summary>
         [MenuItem("SLG/Build Web Player")]
         public static void BuildWeb()
         {
@@ -62,6 +65,7 @@ namespace Slg.EditorTools
             }
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));
+            // Web 开发包使用未压缩文件供网关直接托管，构建结束后恢复项目设置。
             var compression = PlayerSettings.WebGL.compressionFormat;
             BuildReport report;
             try

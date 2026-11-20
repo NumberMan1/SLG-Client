@@ -4,6 +4,7 @@ using UnityEngine.Rendering;
 
 namespace Slg
 {
+    /// <summary>生成登录背景使用的六边形地形预览。</summary>
     [ExecuteAlways]
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public sealed class WorldPreview : MonoBehaviour
@@ -40,6 +41,7 @@ namespace Slg
             {
                 faces[i] = new List<int>();
             }
+            // 按轴坐标铺设六边形，先判定河道和河岸，再以噪声选择陆地高程。
             for (int r = -11; r <= 11; r++)
             {
                 for (int q = -13; q <= 13; q++)
@@ -64,6 +66,7 @@ namespace Slg
 
             mesh = new Mesh { name = "Frontier terrain", hideFlags = HideFlags.HideAndDontSave };
             mesh.SetVertices(vertices);
+            // 每种地形材质对应一个子网格，预览由同一个 MeshRenderer 绘制。
             mesh.subMeshCount = faces.Length;
             for (int i = 0; i < faces.Length; i++)
             {
@@ -124,6 +127,7 @@ namespace Slg
 
         private static void DestroyPreview(Object value)
         {
+            // 编辑模式也会生成预览资源，需要立即释放；运行时由 Unity 延迟销毁。
             if (Application.isPlaying)
             {
                 Destroy(value);

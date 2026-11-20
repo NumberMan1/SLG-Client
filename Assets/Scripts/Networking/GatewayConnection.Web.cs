@@ -26,6 +26,7 @@ namespace Slg.Networking
             Session = session;
         }
 
+        /// <summary>通过 HTTP 获取票据，再通过同源 WebSocket 完成认证。调用方负责释放返回的连接。</summary>
         public static async Task<GatewayConnection> LoginAsync(string gatewayUrl, string account, string password)
         {
             var gateway = new Uri(gatewayUrl, UriKind.Absolute);
@@ -38,6 +39,7 @@ namespace Slg.Networking
             {
                 throw new InvalidDataException("Gateway returned an invalid login reply.");
             }
+            // 保持网关的主机和端口，按页面协议选择 WS 或 WSS。
             var endpoint = new UriBuilder(new Uri(gateway, "/v1/session"))
             {
                 Scheme = gateway.Scheme == "https" ? "wss" : "ws"
@@ -46,6 +48,7 @@ namespace Slg.Networking
             double deadline = Time.realtimeSinceStartupAsDouble + 5;
             try
             {
+                // 每帧让出执行权，浏览器才能继续处理建连和消息回调。
                 while (SlgSocketState(id) == 0)
                 {
                     CheckDeadline(deadline);
@@ -69,6 +72,7 @@ namespace Slg.Networking
                 {
                     throw new IOException("Could not send the connect request.");
                 }
+                // WebSocket 每条二进制消息应包含一整帧 Orbit 数据。
                 var buffer = new byte[HeaderSize + MaxPayload];
                 int size;
                 while ((size = SlgSocketReceive(id, buffer, buffer.Length)) == 0)
@@ -109,6 +113,7 @@ namespace Slg.Networking
             }
         }
 
+        /// <summary>等待 WebSocket 关闭。当前会话协议在认证后收到额外数据会报错。</summary>
         public async Task WaitForDisconnectAsync()
         {
             var buffer = new byte[HeaderSize + MaxPayload];
@@ -122,6 +127,7 @@ namespace Slg.Networking
             }
         }
 
+        /// <summary>关闭 WebSocket 并释放 JavaScript 桥接层中的连接记录，可重复调用。</summary>
         public void Dispose()
         {
             if (socketId == 0) return;

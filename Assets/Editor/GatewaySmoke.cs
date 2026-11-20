@@ -6,11 +6,14 @@ using UnityEngine.Networking;
 
 namespace Slg.EditorTools
 {
+    /// <summary>验证网关是否能通过 HTTP 路由到游戏服。</summary>
     public static class GatewaySmoke
     {
+        /// <summary>从编辑器菜单运行检查，将结果写入控制台。</summary>
         [MenuItem("SLG/Verify Gateway Connection")]
         public static void RunFromMenu() => Run(exitWhenDone: false);
 
+        /// <summary>从批处理入口运行检查，以退出码返回结果。</summary>
         public static void RunBatch() => Run(exitWhenDone: true);
 
         private static void Run(bool exitWhenDone)

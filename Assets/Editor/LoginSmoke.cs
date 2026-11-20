@@ -5,11 +5,14 @@ using UnityEngine;
 
 namespace Slg.EditorTools
 {
+    /// <summary>使用联调账号验证 HTTP 登录和 TCP 票据认证。</summary>
     public static class LoginSmoke
     {
+        /// <summary>从编辑器菜单运行检查，将结果写入控制台。</summary>
         [MenuItem("SLG/Verify Login and TCP Connection")]
         public static void RunFromMenu() => Run(exitWhenDone: false);
 
+        /// <summary>从批处理入口运行检查，以退出码返回结果。</summary>
         public static void RunBatch() => Run(exitWhenDone: true);
 
         private static async void Run(bool exitWhenDone)
