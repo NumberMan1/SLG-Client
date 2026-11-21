@@ -1,10 +1,12 @@
 using System;
+using System.Threading.Tasks;
 using Slg.Networking;
+using Slg.Protocol;
 using UnityEngine;
 
 namespace Slg
 {
-    /// <summary>绘制登录界面，并在场景内管理网关会话及其状态提示。</summary>
+    /// <summary>绘制登录和注册界面，并在场景内管理网关会话。</summary>
     public sealed class LoginScene : MonoBehaviour
     {
         [SerializeField] private Font displayFont;
@@ -13,15 +15,23 @@ namespace Slg
         private string gateway = GatewayHealth.DefaultGatewayUrl;
         private string account = "demo";
         private string password = "";
+        private string confirmedPassword = "";
         private string status = "";
         private bool busy;
         private bool failed;
+        private bool registering;
         private GatewayConnection connection;
+        private WorldSnapshot world;
+        private (MarchOrder Order, string Account, string Instance)? pendingMarch;
+        private long serverTimeMs;
+        private double serverTimeReceivedAt;
 
         private static readonly Color Background = new(0.047f, 0.085f, 0.095f);
         private static readonly Color Paper = new(0.95f, 0.92f, 0.83f);
         private static readonly Color Muted = new(0.64f, 0.72f, 0.71f);
         private static readonly Color Gold = new(0.83f, 0.68f, 0.40f);
+        private static readonly Color PlayerOne = new(0.15f, 0.40f, 0.45f);
+        private static readonly Color PlayerTwo = new(0.51f, 0.27f, 0.21f);
 
         private GUIStyle eyebrow;
         private GUIStyle title;
@@ -29,7 +39,9 @@ namespace Slg
         private GUIStyle label;
         private GUIStyle input;
         private GUIStyle button;
+        private GUIStyle secondaryButton;
         private GUIStyle message;
+        private GUIStyle tileLabel;
 
         private void Awake()
         {
@@ -43,6 +55,46 @@ namespace Slg
         }
 
         private void OnDestroy() => connection?.Dispose();
+
+        private void ShowRegistration(bool show)
+        {
+            registering = show;
+            if (show && account == "demo") account = "";
+            password = "";
+            confirmedPassword = "";
+            status = "";
+            failed = false;
+        }
+
+        private async void Register()
+        {
+            if (password != confirmedPassword)
+            {
+                status = "The passwords do not match.";
+                failed = true;
+                return;
+            }
+            busy = true;
+            failed = false;
+            status = "Creating account…";
+            try
+            {
+                await GatewayConnection.RegisterAsync(gateway.Trim(), account.Trim(), password);
+                if (!this) return;
+                ShowRegistration(false);
+                status = "Account created. Sign in with your new password.";
+            }
+            catch (Exception error)
+            {
+                if (!this) return;
+                status = error.Message;
+                failed = true;
+            }
+            finally
+            {
+                busy = false;
+            }
+        }
 
         private async void SignIn()
         {
@@ -63,9 +115,13 @@ namespace Slg
                     return;
                 }
                 connection = opened;
+                if (pendingMarch is { } march && march.Account != opened.Session.Account)
+                {
+                    pendingMarch = null;
+                }
                 password = "";
                 status = "Connected";
-                WatchConnection(opened);
+                WatchWorld(opened);
             }
             catch (Exception error)
             {
@@ -78,31 +134,97 @@ namespace Slg
             }
         }
 
-        private async void WatchConnection(GatewayConnection opened)
+        private async void WatchWorld(GatewayConnection opened)
         {
-            string reason;
+            double nextSnapshotAt = 0;
+            bool waitingForSeat = false;
             try
             {
-                await opened.WaitForDisconnectAsync();
-                reason = "Gateway closed the connection";
+                while (this && ReferenceEquals(connection, opened))
+                {
+                    if (Time.realtimeSinceStartupAsDouble >= nextSnapshotAt)
+                    {
+                        // 重连先读取快照，再决定是否用原 ID 重试该世界中的行军。
+                        var order = world != null && pendingMarch is { } march && march.Instance == world.Instance
+                            ? march.Order : null;
+                        var reply = await opened.UpdateWorldAsync(new WorldRequest
+                        {
+                            KnownInstance = world?.Instance ?? "",
+                            KnownRevision = world?.Revision ?? 0,
+                            Order = order
+                        });
+                        if (!this || !ReferenceEquals(connection, opened)) return;
+                        ApplyWorldReply(reply, order);
+                        if (reply.Result == WorldResult.Full) waitingForSeat = true;
+                        else if (reply.Snapshot != null) waitingForSeat = false;
+                        // 满员时错开复查时刻，间隔保持在网关的 15 秒读超时内。
+                        double delay = waitingForSeat ? UnityEngine.Random.Range(5f, 8f) : 0.5;
+                        nextSnapshotAt = Time.realtimeSinceStartupAsDouble + delay;
+                    }
+                    // WebGL 与原生端共用轮询，在同一连接上串行读取快照和发送指令。
+                    await Task.Yield();
+                }
             }
             catch (Exception error)
             {
-                reason = error.Message;
-            }
-            // 旧连接的关闭回调只能更新它所属的界面状态。
-            if (this && ReferenceEquals(connection, opened))
-            {
-                Disconnect();
-                status = reason;
+                if (this && ReferenceEquals(connection, opened))
+                {
+                    Disconnect(keepPendingMarch: true);
+                    status = pendingMarch.HasValue ? "Connection lost. Sign in again to check your march." : error.Message;
+                    failed = true;
+                }
             }
         }
 
-        private void Disconnect()
+        private void ApplyWorldReply(WorldReply reply, MarchOrder order)
+        {
+            if (reply.ServerTimeMs != 0)
+            {
+                serverTimeMs = reply.ServerTimeMs;
+                serverTimeReceivedAt = Time.realtimeSinceStartupAsDouble;
+            }
+            if (reply.Result == WorldResult.WorldChanged ||
+                (reply.Snapshot != null && pendingMarch is { } march && march.Instance != reply.Snapshot.Instance))
+            {
+                world = reply.Snapshot;
+                pendingMarch = null;
+                failed = false;
+                status = "The world changed. Choose a tile again.";
+                return;
+            }
+            if (reply.Result == WorldResult.Full) world = null;
+            else if (reply.Snapshot != null) world = reply.Snapshot;
+            if (reply.Result == WorldResult.Unavailable)
+            {
+                // 上游响应可能丢失，重试时沿用原指令 ID。
+                status = "World temporarily unavailable. Retrying…";
+                failed = true;
+                return;
+            }
+            if (order != null || failed || world == null)
+            {
+                failed = reply.Result != WorldResult.Ok;
+                status = reply.Result switch
+                {
+                    WorldResult.Ok => order == null ? "Connected" : "March ordered",
+                    WorldResult.Full => "The world is full. Waiting for a seat…",
+                    WorldResult.InvalidTarget => "Choose a neutral tile next to your territory.",
+                    WorldResult.AlreadyMarching => "Wait for your current march to arrive.",
+                    WorldResult.Reserved => "Another player is marching to that tile.",
+                    _ => "March order rejected."
+                };
+            }
+            if (order != null) pendingMarch = null;
+        }
+
+        private void Disconnect(bool keepPendingMarch = false)
         {
             var opened = connection;
             connection = null;
             opened.Dispose();
+            world = null;
+            if (!keepPendingMarch) pendingMarch = null;
+            failed = false;
             status = "Connection closed";
         }
 
@@ -126,22 +248,12 @@ namespace Slg
             GUI.Label(new Rect(x, y + 54, 400, 24), "SLG  /  CONNECTION DEMO", eyebrow);
             GUI.Label(new Rect(x - 3, y + 94, 450, 79), "Frontier", title);
             GUI.Label(new Rect(x, y + 188, 408, 51),
-                "Sign in to explore Frontier.", body);
+                registering ? "Create your Frontier account." : "Sign in to explore Frontier.", body);
             Fill(new Rect(x, y + 248, 410, 1), new Color(0.23f, 0.30f, 0.30f));
 
             if (connection == null)
             {
-                bool wasEnabled = GUI.enabled;
-                GUI.enabled = !busy;
-                gateway = DrawField(x, y + 269, "Gateway", gateway);
-                account = DrawField(x, y + 347, "Account", account);
-                password = DrawField(x, y + 425, "Password", password, secret: true);
-                GUI.enabled = !busy && !string.IsNullOrWhiteSpace(account) && !string.IsNullOrEmpty(password);
-                if (DrawButton(new Rect(x, y + 518, 410, 48), busy ? "Connecting…" : "Sign in"))
-                {
-                    SignIn();
-                }
-                GUI.enabled = wasEnabled;
+                DrawCredentialsForm(x, y);
             }
             else
             {
@@ -155,9 +267,99 @@ namespace Slg
             }
 
             message.normal.textColor = failed ? new Color(1f, 0.61f, 0.52f) : Muted;
-            GUI.Label(new Rect(x, y + 580, 410, 69), status, message);
-            GUI.Label(new Rect(width * 0.42f + 36, height - 61, 400, 25), "WORLD MAP PREVIEW", eyebrow);
+            GUI.Label(new Rect(x, y + (registering ? 611 : 580), 410, 69), status, message);
+            if (world == null)
+            {
+                GUI.Label(new Rect(width * 0.42f + 36, height - 61, 400, 25), "WORLD MAP PREVIEW", eyebrow);
+            }
+            else
+            {
+                DrawWorld(width, height);
+            }
             GUI.matrix = original;
+        }
+
+        private void DrawCredentialsForm(float x, float y)
+        {
+            bool wasEnabled = GUI.enabled;
+            bool showingRegistration = registering;
+            GUI.enabled = wasEnabled && !busy;
+            float row = showingRegistration ? 68 : 78;
+            gateway = DrawField(x, y + 269, "Gateway", gateway);
+            account = DrawField(x, y + 269 + row, "Account", account);
+            password = DrawField(x, y + 269 + 2 * row, "Password", password, secret: true);
+            if (showingRegistration)
+            {
+                confirmedPassword = DrawField(x, y + 269 + 3 * row, "Confirm password", confirmedPassword, secret: true);
+            }
+            GUI.enabled = wasEnabled && !busy && !string.IsNullOrWhiteSpace(gateway) &&
+                !string.IsNullOrWhiteSpace(account) && !string.IsNullOrEmpty(password) &&
+                (!showingRegistration || !string.IsNullOrEmpty(confirmedPassword));
+            float buttonY = y + (showingRegistration ? 550 : 518);
+            string primaryLabel = showingRegistration ? (busy ? "Creating…" : "Create account") : (busy ? "Connecting…" : "Sign in");
+            if (DrawButton(new Rect(x, buttonY, 242, 48), primaryLabel))
+            {
+                if (showingRegistration) Register();
+                else SignIn();
+            }
+            GUI.enabled = wasEnabled && !busy;
+            var secondaryArea = new Rect(x + 254, buttonY, 156, 48);
+            Fill(secondaryArea, new Color(0.23f, 0.30f, 0.30f));
+            Fill(new Rect(secondaryArea.x + 1, secondaryArea.y + 1, 154, 46), Background);
+            if (GUI.Button(secondaryArea, showingRegistration ? "Back to sign in" : "Create account", secondaryButton))
+            {
+                GUI.FocusControl(null);
+                ShowRegistration(!showingRegistration);
+            }
+            GUI.enabled = wasEnabled;
+        }
+
+        private void DrawWorld(float width, float height)
+        {
+            float left = width * 0.42f;
+            float center = (left + width) * 0.5f;
+            float top = (height - 720) * 0.5f;
+            Fill(new Rect(left + 1, 0, width - left - 1, height), Background);
+            GUI.Label(new Rect(left + 36, top + 54, 400, 24), "SHARED WORLD", eyebrow);
+            GUI.Label(new Rect(left + 36, top + 88, width - left - 72, 32),
+                $"Player {world.YourPlayer} · Select a neutral tile next to your territory", body);
+
+            foreach (var tile in world.Tiles)
+            {
+                // 轴坐标中的相邻行横向错开半格。
+                var rect = new Rect(center + (tile.Q + tile.R * 0.5f) * 111 - 49, top + 339 + tile.R * 74, 98, 62);
+                var color = tile.Owner switch
+                {
+                    1 => PlayerOne,
+                    2 => PlayerTwo,
+                    _ => new Color(0.18f, 0.23f, 0.24f)
+                };
+                bool marching = false;
+                foreach (var march in world.Marches)
+                {
+                    if (march.TargetTileId == tile.Id) marching = true;
+                }
+                if (marching) color = new Color(0.42f, 0.32f, 0.17f);
+                Fill(rect, color);
+                string caption = tile.Home != 0 ? $"Home {tile.Home}" : marching ? "Marching" :
+                    tile.Owner == 0 ? $"Tile {tile.Id}" : $"Player {tile.Owner}";
+                if (GUI.Button(rect, caption, tileLabel) && tile.Owner == 0 && tile.Home == 0 &&
+                    !marching && pendingMarch == null)
+                {
+                    var order = new MarchOrder { CommandId = Guid.NewGuid().ToString("N"), TargetTileId = tile.Id };
+                    pendingMarch = (order, connection.Session.Account, world.Instance);
+                }
+            }
+
+            double now = serverTimeMs + (Time.realtimeSinceStartupAsDouble - serverTimeReceivedAt) * 1000;
+            float line = top + 590;
+            foreach (var march in world.Marches)
+            {
+                double seconds = Math.Max(0, (march.ArrivesAtMs - now) / 1000);
+                GUI.Label(new Rect(left + 36, line, width - left - 72, 28),
+                    $"Player {march.Player} · {march.SourceTileId} → {march.TargetTileId} · {seconds:0.0}s", body);
+                line += 30;
+            }
         }
 
         private string DrawField(float x, float y, string caption, string value, bool secret = false)
@@ -186,8 +388,10 @@ namespace Slg
             input = Text(interfaceFont, 16, Paper, alignment: TextAnchor.MiddleLeft);
             input.padding = new RectOffset(12, 12, 0, 0);
             button = Text(interfaceFont, 16, Background, FontStyle.Bold, TextAnchor.MiddleCenter);
+            secondaryButton = Text(interfaceFont, 15, Paper, FontStyle.Bold, TextAnchor.MiddleCenter);
             message = Text(interfaceFont, 15, Muted);
             message.wordWrap = true;
+            tileLabel = Text(interfaceFont, 15, Paper, FontStyle.Bold, TextAnchor.MiddleCenter);
         }
 
         private static GUIStyle Text(Font font, int size, Color color,

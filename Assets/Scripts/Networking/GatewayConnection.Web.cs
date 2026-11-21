@@ -29,11 +29,7 @@ namespace Slg.Networking
         /// <summary>通过 HTTP 获取票据，再通过同源 WebSocket 完成认证。调用方负责释放返回的连接。</summary>
         public static async Task<GatewayConnection> LoginAsync(string gatewayUrl, string account, string password)
         {
-            var gateway = new Uri(gatewayUrl, UriKind.Absolute);
-            if (gateway.Scheme != "http" && gateway.Scheme != "https")
-            {
-                throw new ArgumentException("Gateway URL must use HTTP or HTTPS.", nameof(gatewayUrl));
-            }
+            var gateway = ParseGateway(gatewayUrl);
             var login = await RequestTicketAsync(gateway, account, password);
             if (string.IsNullOrEmpty(login.Ticket))
             {
@@ -113,18 +109,34 @@ namespace Slg.Networking
             }
         }
 
-        /// <summary>等待 WebSocket 关闭。当前会话协议在认证后收到额外数据会报错。</summary>
-        public async Task WaitForDisconnectAsync()
+        private async Task<WorldReply> ExchangeWorldAsync(byte[] frame, uint sequence)
         {
-            var buffer = new byte[HeaderSize + MaxPayload];
-            while (socketId != 0 && SlgSocketState(socketId) == 1)
+            int id = socketId;
+            if (SlgSocketSend(id, frame, frame.Length) != 1)
             {
-                if (SlgSocketReceive(socketId, buffer, buffer.Length) != 0)
+                throw new IOException("Could not send a world request.");
+            }
+            var buffer = new byte[HeaderSize + MaxPayload];
+            double deadline = Time.realtimeSinceStartupAsDouble + 5;
+            int size;
+            // 浏览器每次返回一整条消息，待网关回包期间让出主线程。
+            while ((size = SlgSocketReceive(id, buffer, buffer.Length)) == 0)
+            {
+                if (SlgSocketState(id) != 1)
                 {
-                    throw new InvalidDataException("Gateway sent unexpected data after authentication.");
+                    throw new EndOfStreamException("Gateway closed the WebSocket during a world request.");
+                }
+                if (Time.realtimeSinceStartupAsDouble >= deadline)
+                {
+                    throw new TimeoutException("World request timed out.");
                 }
                 await Task.Yield();
             }
+            if (size < HeaderSize || size != HeaderSize + ValidateWorldHeader(buffer, sequence))
+            {
+                throw new InvalidDataException("Gateway returned an incomplete world reply.");
+            }
+            return WorldReply.Parser.ParseFrom(buffer, HeaderSize, size - HeaderSize);
         }
 
         /// <summary>关闭 WebSocket 并释放 JavaScript 桥接层中的连接记录，可重复调用。</summary>

@@ -4,9 +4,9 @@
 
 | 路径 | 职责 |
 | --- | --- |
-| `Assets/Scenes/Frontier.unity` | 3D 地形预览和登录演示 |
-| `Assets/Scripts/Networking` | HTTP 登录、原生 TCP 和浏览器 WebSocket 认证及健康检查 |
-| `Assets/Scripts/Protocol` | 从 SLG-Server 的 `proto/session.proto` 生成的 C# 类型 |
+| `Assets/Scenes/Frontier.unity` | 地形预览、登录和共享地图 |
+| `Assets/Scripts/Networking` | HTTP 登录、TCP 和 WebSocket 认证及玩法请求 |
+| `Assets/Scripts/Protocol` | 从 SLG-Server 的 `proto` 生成的 C# 类型 |
 | `Assets/Plugins` | Protobuf 托管运行库与许可证 |
 | `Assets/Editor` | Unity 编辑器菜单与批处理冒烟入口 |
 | `Packages/manifest.json` | Unity 包依赖 |
@@ -14,7 +14,7 @@
 
 ## 登录和 TCP 连接
 
-打开 `Assets/Scenes/Frontier.unity`，点击 **Play**，在 **Game** 视图查看地形和登录面板。按 SLG-Server 的 README 在 Podman 中启动网关，再输入服务端配置的账号和密码并点击 **Sign in**。网关默认地址是 `http://127.0.0.1:8080`，账号默认是 `demo`。认证成功后界面显示服务端返回的会话 ID。此场景使用静态地形预览，支持主动断开连接，并会显示网关关闭连接的结果。若打包后通过本机明文 HTTP 联调，请构建 **Development Build**。
+打开 `Assets/Scenes/Frontier.unity`，点击 **Play**，在 **Game** 视图查看地形和登录面板。按 SLG-Server 的 README 启动服务，输入账号和密码并点击 **Sign in**。网关默认地址是 `http://127.0.0.1:8080`，账号默认是 `demo`。认证成功后右侧显示共享地图。用两个账号分别登录，点击与己方领地相邻的中立格，双方可以看到行军倒计时和到达后的归属变化。若打包后通过本机明文 HTTP 联调，请构建 **Development Build**。
 
 作品集以在线试玩网页作为主要入口，并提供实际玩法演示视频与两个代码仓库的链接。[SLG-Client](https://github.com/NumberMan1/SLG-Client) · [SLG-Server](https://github.com/NumberMan1/SLG-Server)
 
@@ -22,15 +22,17 @@
 
 在 Unity Hub 为 `6000.3.27f1` 添加 **Web Build Support**。在编辑器选择 **SLG → Build Web Player** 并选择输出目录，或用批处理入口 `Slg.EditorTools.BuildCiPlayer.BuildWeb`，传入 `-buildTarget WebGL -customBuildPath <输出目录>`。构建使用未压缩的 Web 文件，方便普通静态文件服务器托管。
 
-网页启动后自动使用当前网页所在的域名和端口作为网关地址。HTTP 登录仍使用 `/v1/login`，浏览器通过 `/v1/session` 建立二进制 WebSocket，HTTPS 网页自动选择 WSS。每个 WebSocket 消息包含一个完整 Orbit 帧。
+网页启动后自动使用当前网页所在的域名和端口作为网关地址。HTTP 注册和登录分别使用 `/v1/register` 和 `/v1/login`。浏览器通过 `/v1/session` 建立二进制 WebSocket，HTTPS 网页自动选择 WSS。每个 WebSocket 消息包含一个完整 Orbit 帧。
 
-本机可将网关的 `SLG_WEB_ROOT` 设置为 Web 构建目录，再通过网关 HTTP 地址打开试玩。部署时将 Web 静态文件、`/v1/login` 和 `/v1/session` 放在同一个 HTTPS 站点，反向代理需支持 WebSocket Upgrade 并保留原始 Host。浏览器连接遵循同源校验。
+本机可将网关的 `SLG_WEB_ROOT` 设置为 Web 构建目录，再通过网关 HTTP 地址打开试玩。部署时将 Web 静态文件、`/v1/register`、`/v1/login` 和 `/v1/session` 放在同一个 HTTPS 站点，反向代理需支持 WebSocket Upgrade 并保留原始 Host。浏览器连接遵循同源校验。
 
-目前场景展示地形预览和登录认证，后续地图交互、行军与战斗也会通过这条网页连接实现。在线试玩地址需在部署到公网托管环境后提供。
+进入共享地图后，网页继续使用这条 WebSocket 发送行军指令和读取世界状态。
 
 ### 编辑器冒烟检查
 
-在服务端设置 `SLG_DEMO_PASSWORD` 并启动网关。在启动 Unity 的终端设置同一个 `SLG_DEMO_PASSWORD`，然后选择 **SLG → Verify Login and TCP Connection**。账号默认是 `demo`，可在两端用 `SLG_DEMO_ACCOUNT` 指定同一个账号。网关默认是 `http://127.0.0.1:8080`，可用 `SLG_CLIENT_GATEWAY_URL` 覆盖。
+玩家可在登录页选择 **Create account**，填写账号、密码和确认密码。注册成功后返回登录页，使用新账号登录。
+
+执行编辑器冒烟检查时，在启动 Unity 的终端设置 `SLG_DEMO_PASSWORD` 为已有联调账号的密码，然后选择 **SLG → Verify Login and TCP Connection**。账号默认是 `demo`，可用 `SLG_DEMO_ACCOUNT` 指定。网关默认是 `http://127.0.0.1:8080`，可用 `SLG_CLIENT_GATEWAY_URL` 覆盖。
 
 成功时 Console 显示 `SLG login and TCP smoke passed (session …)`。脚本完成 HTTP 登录、TCP 建连及认证回执校验，然后关闭测试连接。批处理入口是 `Slg.EditorTools.LoginSmoke.RunBatch`，可替换下面命令中的 `-executeMethod` 参数。
 
@@ -38,7 +40,7 @@ Unity 插件包含 NuGet 的 `Google.Protobuf 3.33.0` 与 `System.Runtime.Compil
 
 ## HTTP 健康检查
 
-按 SLG-Server 的 README 启动 Go 游戏服和网关。然后在 Unity 编辑器中选择 **SLG → Verify Gateway Connection**。成功时，Console 会显示 `SLG gateway smoke passed (game-server: ok)`。检查会确认网关返回的响应来自游戏服，并验证其状态字段。默认访问 `http://127.0.0.1:8080/v1/game/health`。如需指定另一个网关，可在启动 Unity 前设置 `SLG_CLIENT_GATEWAY_URL` 为网关基址。[SLG-Server 仓库](https://github.com/NumberMan1/SLG-Server)
+按 SLG-Server 的 README 启动 C++ 游戏服和 Go 网关。然后在 Unity 编辑器中选择 **SLG → Verify Gateway Connection**。成功时，Console 会显示 `SLG gateway smoke passed (game-server: ok)`。默认访问 `http://127.0.0.1:8080/v1/game/health`。如需指定另一个网关，可用 `SLG_CLIENT_GATEWAY_URL` 覆盖。[SLG-Server 仓库](https://github.com/NumberMan1/SLG-Server)
 
 也可以关闭该工程的编辑器窗口后，在客户端仓库根目录运行批处理检查。将命令中的编辑器路径替换为本机安装路径。检查完成时，成功退出码为 0，失败退出码为 1，细节记录在日志中。
 
