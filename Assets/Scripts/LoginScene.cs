@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Slg.Networking;
 using Slg.Protocol;
@@ -22,7 +23,12 @@ namespace Slg
         private bool registering;
         private GatewayConnection connection;
         private WorldSnapshot world;
+        private const int BattleReportLimit = 8;
+        private readonly List<WorldBattleReport> battleReports = new(BattleReportLimit);
+        private int battleReportIndex;
         private (MarchOrder Order, string Account, string Instance)? pendingMarch;
+        private uint marchTroops = 40;
+        private static readonly uint[] MarchChoices = { 20, 40, 60 };
         private long serverTimeMs;
         private double serverTimeReceivedAt;
 
@@ -171,6 +177,7 @@ namespace Slg
                         {
                             KnownInstance = world?.Instance ?? "",
                             KnownRevision = world?.Revision ?? 0,
+                            KnownBattleId = battleReports.Count == 0 ? 0 : battleReports[^1].BattleId,
                             Order = order
                         });
                         if (!this || !ReferenceEquals(connection, opened)) return;
@@ -204,17 +211,25 @@ namespace Slg
                 serverTimeMs = reply.ServerTimeMs;
                 serverTimeReceivedAt = Time.realtimeSinceStartupAsDouble;
             }
-            if (reply.Result == WorldResult.WorldChanged ||
-                (reply.Snapshot != null && pendingMarch is { } march && march.Instance != reply.Snapshot.Instance))
+            bool changed = reply.Result == WorldResult.WorldChanged ||
+                (reply.Snapshot != null && pendingMarch is { } march && march.Instance != reply.Snapshot.Instance);
+            // 世界实例变化时从服务端重新读取历史，旧游标不能用于新进程。
+            if (reply.Result == WorldResult.Full || (reply.Snapshot != null && world?.Instance != reply.Snapshot.Instance))
+                battleReports.Clear();
+            if (changed || reply.Result == WorldResult.Full) world = reply.Snapshot;
+            else if (reply.Snapshot != null) world = reply.Snapshot;
+            if (world != null)
             {
-                world = reply.Snapshot;
+                if (reply.HasAvailableTroops) world.AvailableTroops = reply.AvailableTroops;
+                ApplyBattleReports(reply);
+            }
+            if (changed)
+            {
                 pendingMarch = null;
                 failed = false;
                 status = "世界实例已变更，请重新选择地块。";
                 return;
             }
-            if (reply.Result == WorldResult.Full) world = null;
-            else if (reply.Snapshot != null) world = reply.Snapshot;
             if (reply.Result == WorldResult.Unavailable)
             {
                 // 上游响应可能丢失，重试时沿用原指令 ID。
@@ -229,13 +244,35 @@ namespace Slg
                 {
                     WorldResult.Ok => order == null ? "已连接" : "已派出行军",
                     WorldResult.Full => "世界已满，正在等待名额…",
-                    WorldResult.InvalidTarget => "请选择与己方领地相邻的中立地块。",
+                    WorldResult.InvalidTarget => "请选择领地旁的中立或敌方地块。",
                     WorldResult.AlreadyMarching => "请等待当前行军抵达。",
                     WorldResult.Reserved => "已有玩家正在前往该地块。",
+                    WorldResult.InsufficientTroops => "预备兵力不足，请等待补充。",
                     _ => "行军指令被拒绝。"
                 };
             }
             if (order != null) pendingMarch = null;
+        }
+
+        private void ApplyBattleReports(WorldReply reply)
+        {
+            bool followsLatest = battleReportIndex >= battleReports.Count - 1;
+            var after = battleReports.Count == 0 ? 0 : battleReports[^1].BattleId;
+            foreach (var report in reply.BattleReports)
+            {
+                if (report.BattleId > after) battleReports.Add(report);
+            }
+            // 兼容只在地图快照内返回最近一份战报的服务端。
+            if (reply.BattleReports.Count == 0 && reply.Snapshot?.LastBattle is { } last && last.BattleId > after)
+                battleReports.Add(last);
+
+            int excess = battleReports.Count - BattleReportLimit;
+            if (excess > 0)
+            {
+                battleReports.RemoveRange(0, excess);
+                battleReportIndex = Math.Max(0, battleReportIndex - excess);
+            }
+            if (followsLatest) battleReportIndex = Math.Max(0, battleReports.Count - 1);
         }
 
         private void Disconnect(bool keepPendingMarch = false)
@@ -244,6 +281,8 @@ namespace Slg
             connection = null;
             opened.Dispose();
             world = null;
+            battleReports.Clear();
+            battleReportIndex = 0;
             if (!keepPendingMarch) pendingMarch = null;
             failed = false;
             status = "连接已关闭";
@@ -341,9 +380,19 @@ namespace Slg
             float center = (left + width) * 0.5f;
             float top = (height - 720) * 0.5f;
             Fill(new Rect(left + 1, 0, width - left - 1, height), Background);
-            GUI.Label(new Rect(left + 36, top + 54, 400, 24), "共享世界", eyebrow);
+            GUI.Label(new Rect(left + 36, top + 54, 400, 24), "领地争夺", eyebrow);
             GUI.Label(new Rect(left + 36, top + 88, width - left - 72, 32),
-                $"玩家 {world.YourPlayer} · 请选择领地旁的中立地块", body);
+                $"玩家 {world.YourPlayer} · 预备兵力 {world.AvailableTroops} · 补兵上限 {world.TroopCapacity}", body);
+            GUI.Label(new Rect(left + 36, top + 133, 96, 30), "出征兵力", label);
+            for (int i = 0; i < MarchChoices.Length; i++)
+            {
+                uint troops = MarchChoices[i];
+                if (DrawButton(new Rect(left + 129 + i * 126, top + 126, 116, 34),
+                    troops == marchTroops ? $"{troops} · 已选" : $"{troops}"))
+                {
+                    marchTroops = troops;
+                }
+            }
 
             foreach (var tile in world.Tiles)
             {
@@ -363,11 +412,11 @@ namespace Slg
                 if (marching) color = new Color(0.42f, 0.32f, 0.17f);
                 Fill(rect, color);
                 string caption = tile.Home != 0 ? $"出生地 {tile.Home}" : marching ? "行军中" :
-                    tile.Owner == 0 ? $"地块 {tile.Id}" : $"玩家 {tile.Owner}";
-                if (GUI.Button(rect, caption, tileLabel) && tile.Owner == 0 && tile.Home == 0 &&
+                    tile.Owner == 0 ? $"地块 {tile.Id}" : $"玩家 {tile.Owner}\n驻军 {tile.Garrison}";
+                if (GUI.Button(rect, caption, tileLabel) && tile.Owner != world.YourPlayer && tile.Home == 0 &&
                     !marching && pendingMarch == null)
                 {
-                    var order = new MarchOrder { CommandId = Guid.NewGuid().ToString("N"), TargetTileId = tile.Id };
+                    var order = new MarchOrder { CommandId = Guid.NewGuid().ToString("N"), TargetTileId = tile.Id, Troops = marchTroops };
                     pendingMarch = (order, connection.Session.Account, world.Instance);
                 }
             }
@@ -377,9 +426,23 @@ namespace Slg
             foreach (var march in world.Marches)
             {
                 double seconds = Math.Max(0, (march.ArrivesAtMs - now) / 1000);
+                string progress = march.Hostile && seconds == 0 ? "等待战斗结算" : $"{seconds:0.0} 秒";
                 GUI.Label(new Rect(left + 36, line, width - left - 72, 28),
-                    $"玩家 {march.Player} · {march.SourceTileId} → {march.TargetTileId} · {seconds:0.0} 秒", body);
+                    $"玩家 {march.Player} · {march.Troops} 兵 · {march.SourceTileId} → {march.TargetTileId} · {progress}", body);
                 line += 30;
+            }
+            if (battleReports.Count > 0)
+            {
+                if (battleReportIndex > 0 && DrawButton(new Rect(width - 156, top + 646, 54, 28), "上一份"))
+                    battleReportIndex--;
+                if (battleReportIndex < battleReports.Count - 1 &&
+                    DrawButton(new Rect(width - 94, top + 646, 54, 28), "下一份"))
+                    battleReportIndex++;
+                var battle = battleReports[battleReportIndex];
+                string outcome = battle.Captured ? $"玩家 {battle.Attacker} 攻占" : $"玩家 {battle.Defender} 守住";
+                GUI.Label(new Rect(left + 36, top + 651, width - left - 72, 56),
+                    $"战报 · {outcome}地块 {battle.TargetTileId}\n" +
+                    $"攻方 {battle.AttackerTroops} → {battle.AttackerSurvivors} 兵 · 守方 {battle.DefenderTroops} → {battle.DefenderSurvivors} 兵", body);
             }
         }
 

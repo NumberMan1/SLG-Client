@@ -14,7 +14,7 @@
 
 ## 登录和 TCP 连接
 
-打开 `Assets/Scenes/Frontier.unity`，点击 **Play**，在 **Game** 视图查看地形和登录面板。按 SLG-Server 的 README 启动服务，输入账号和密码并点击 **登录**。网关默认地址是 `http://127.0.0.1:8080`，账号默认是 `demo`。认证成功后右侧显示共享地图。用两个账号分别登录，点击与己方领地相邻的中立格，双方可以看到行军倒计时和到达后的归属变化。若打包后通过本机明文 HTTP 联调，请构建 **Development Build**。
+打开 `Assets/Scenes/Frontier.unity`，点击 **Play**，在 **Game** 视图查看地形和登录面板。按 SLG-Server 的 README 启动服务，输入账号和密码并点击 **登录**。网关默认地址是 `http://127.0.0.1:8080`，账号默认是 `demo`。用两个账号分别登录，在地图上选择 20、40 或 60 兵，再点击己方领地旁的中立或敌方地块派兵。双方可以看到行军倒计时、驻军、归属，并可翻阅最近 8 份战报。预备兵力低于 100 时会自动补充，撤回的士兵可使兵力超过 100。若打包后通过本机明文 HTTP 联调，请构建 **Development Build**。
 
 原生端和 WebGL 共用简体中文界面。`Assets/Fonts/SlgInterfaceSC.ttf` 是基于 Noto Sans SC 制作的项目字体，包含常用简体中文字形及界面用字，许可在同目录的 `NotoSansSC-OFL.txt`。 [Noto CJK](https://github.com/notofonts/noto-cjk)
 

@@ -24,43 +24,58 @@ namespace Slg.Protocol {
     static WorldReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChFwcm90by93b3JsZC5wcm90bxIMc2xnLndvcmxkLnYxIjgKCk1hcmNoT3Jk",
+            "ChFwcm90by93b3JsZC5wcm90bxIMc2xnLndvcmxkLnYxIkgKCk1hcmNoT3Jk",
             "ZXISEgoKY29tbWFuZF9pZBgBIAEoCRIWCg50YXJnZXRfdGlsZV9pZBgCIAEo",
-            "DSJnCgxXb3JsZFJlcXVlc3QSFgoOa25vd25faW5zdGFuY2UYASABKAkSFgoO",
-            "a25vd25fcmV2aXNpb24YAiABKAQSJwoFb3JkZXIYAyABKAsyGC5zbGcud29y",
-            "bGQudjEuTWFyY2hPcmRlciJMCgxXb3JsZENvbW1hbmQSDwoHYWNjb3VudBgB",
-            "IAEoCRIrCgdyZXF1ZXN0GAIgASgLMhouc2xnLndvcmxkLnYxLldvcmxkUmVx",
-            "dWVzdCJKCglXb3JsZFRpbGUSCgoCaWQYASABKA0SCQoBcRgCIAEoERIJCgFy",
-            "GAMgASgREg0KBW93bmVyGAQgASgNEgwKBGhvbWUYBSABKA0iYwoKV29ybGRN",
-            "YXJjaBIOCgZwbGF5ZXIYASABKA0SFgoOc291cmNlX3RpbGVfaWQYAiABKA0S",
-            "FgoOdGFyZ2V0X3RpbGVfaWQYAyABKA0SFQoNYXJyaXZlc19hdF9tcxgEIAEo",
-            "AyKbAQoNV29ybGRTbmFwc2hvdBIQCghpbnN0YW5jZRgBIAEoCRIQCghyZXZp",
-            "c2lvbhgCIAEoBBITCgt5b3VyX3BsYXllchgDIAEoDRImCgV0aWxlcxgEIAMo",
-            "CzIXLnNsZy53b3JsZC52MS5Xb3JsZFRpbGUSKQoHbWFyY2hlcxgFIAMoCzIY",
-            "LnNsZy53b3JsZC52MS5Xb3JsZE1hcmNoIn4KCldvcmxkUmVwbHkSKQoGcmVz",
-            "dWx0GAEgASgOMhkuc2xnLndvcmxkLnYxLldvcmxkUmVzdWx0EhYKDnNlcnZl",
-            "cl90aW1lX21zGAIgASgDEi0KCHNuYXBzaG90GAMgASgLMhsuc2xnLndvcmxk",
-            "LnYxLldvcmxkU25hcHNob3QqbAoOV29ybGRNZXNzYWdlSWQSIAocV09STERf",
-            "TUVTU0FHRV9JRF9VTlNQRUNJRklFRBAAEhwKGFdPUkxEX01FU1NBR0VfSURf",
-            "UkVRVUVTVBADEhoKFldPUkxEX01FU1NBR0VfSURfUkVQTFkQBCr2AQoLV29y",
-            "bGRSZXN1bHQSEwoPV09STERfUkVTVUxUX09LEAASFQoRV09STERfUkVTVUxU",
-            "X0ZVTEwQARIfChtXT1JMRF9SRVNVTFRfSU5WQUxJRF9UQVJHRVQQAhIhCh1X",
-            "T1JMRF9SRVNVTFRfQUxSRUFEWV9NQVJDSElORxADEhkKFVdPUkxEX1JFU1VM",
-            "VF9SRVNFUlZFRBAEEh4KGldPUkxEX1JFU1VMVF9JTlZBTElEX09SREVSEAUS",
-            "HgoaV09STERfUkVTVUxUX1dPUkxEX0NIQU5HRUQQBhIcChhXT1JMRF9SRVNV",
-            "TFRfVU5BVkFJTEFCTEUQB0JBWjBnaXRodWIuY29tL051bWJlck1hbjEvc2xn",
-            "LXNlcnZlci9wcm90bztzZXNzaW9ucGKqAgxTbGcuUHJvdG9jb2xiBnByb3Rv",
-            "Mw=="));
+            "DRIOCgZ0cm9vcHMYAyABKA0imQEKDFdvcmxkUmVxdWVzdBIWCg5rbm93bl9p",
+            "bnN0YW5jZRgBIAEoCRIWCg5rbm93bl9yZXZpc2lvbhgCIAEoBBInCgVvcmRl",
+            "chgDIAEoCzIYLnNsZy53b3JsZC52MS5NYXJjaE9yZGVyEhwKD2tub3duX2Jh",
+            "dHRsZV9pZBgEIAEoBEgAiAEBQhIKEF9rbm93bl9iYXR0bGVfaWQiTAoMV29y",
+            "bGRDb21tYW5kEg8KB2FjY291bnQYASABKAkSKwoHcmVxdWVzdBgCIAEoCzIa",
+            "LnNsZy53b3JsZC52MS5Xb3JsZFJlcXVlc3QiXAoJV29ybGRUaWxlEgoKAmlk",
+            "GAEgASgNEgkKAXEYAiABKBESCQoBchgDIAEoERINCgVvd25lchgEIAEoDRIM",
+            "CgRob21lGAUgASgNEhAKCGdhcnJpc29uGAYgASgNIoQBCgpXb3JsZE1hcmNo",
+            "Eg4KBnBsYXllchgBIAEoDRIWCg5zb3VyY2VfdGlsZV9pZBgCIAEoDRIWCg50",
+            "YXJnZXRfdGlsZV9pZBgDIAEoDRIVCg1hcnJpdmVzX2F0X21zGAQgASgDEg4K",
+            "BnRyb29wcxgFIAEoDRIPCgdob3N0aWxlGAYgASgIIoICChFXb3JsZEJhdHRs",
+            "ZVJlcG9ydBIRCgliYXR0bGVfaWQYASABKAQSFgoOdGFyZ2V0X3RpbGVfaWQY",
+            "AiABKA0SEAoIYXR0YWNrZXIYAyABKA0SEAoIZGVmZW5kZXIYBCABKA0SFwoP",
+            "YXR0YWNrZXJfdHJvb3BzGAUgASgNEhcKD2RlZmVuZGVyX3Ryb29wcxgGIAEo",
+            "DRIaChJhdHRhY2tlcl9zdXJ2aXZvcnMYByABKA0SGgoSZGVmZW5kZXJfc3Vy",
+            "dml2b3JzGAggASgNEhAKCGNhcHR1cmVkGAkgASgIEhQKDHJ1bGVfdmVyc2lv",
+            "bhgKIAEoDRIMCgRzZWVkGAsgASgEIoMCCg1Xb3JsZFNuYXBzaG90EhAKCGlu",
+            "c3RhbmNlGAEgASgJEhAKCHJldmlzaW9uGAIgASgEEhMKC3lvdXJfcGxheWVy",
+            "GAMgASgNEiYKBXRpbGVzGAQgAygLMhcuc2xnLndvcmxkLnYxLldvcmxkVGls",
+            "ZRIpCgdtYXJjaGVzGAUgAygLMhguc2xnLndvcmxkLnYxLldvcmxkTWFyY2gS",
+            "GAoQYXZhaWxhYmxlX3Ryb29wcxgGIAEoDRIWCg50cm9vcF9jYXBhY2l0eRgH",
+            "IAEoDRI0CgtsYXN0X2JhdHRsZRgIIAEoCzIfLnNsZy53b3JsZC52MS5Xb3Js",
+            "ZEJhdHRsZVJlcG9ydCLrAQoKV29ybGRSZXBseRIpCgZyZXN1bHQYASABKA4y",
+            "GS5zbGcud29ybGQudjEuV29ybGRSZXN1bHQSFgoOc2VydmVyX3RpbWVfbXMY",
+            "AiABKAMSLQoIc25hcHNob3QYAyABKAsyGy5zbGcud29ybGQudjEuV29ybGRT",
+            "bmFwc2hvdBIdChBhdmFpbGFibGVfdHJvb3BzGAQgASgNSACIAQESNwoOYmF0",
+            "dGxlX3JlcG9ydHMYBSADKAsyHy5zbGcud29ybGQudjEuV29ybGRCYXR0bGVS",
+            "ZXBvcnRCEwoRX2F2YWlsYWJsZV90cm9vcHMqbAoOV29ybGRNZXNzYWdlSWQS",
+            "IAocV09STERfTUVTU0FHRV9JRF9VTlNQRUNJRklFRBAAEhwKGFdPUkxEX01F",
+            "U1NBR0VfSURfUkVRVUVTVBADEhoKFldPUkxEX01FU1NBR0VfSURfUkVQTFkQ",
+            "BCqcAgoLV29ybGRSZXN1bHQSEwoPV09STERfUkVTVUxUX09LEAASFQoRV09S",
+            "TERfUkVTVUxUX0ZVTEwQARIfChtXT1JMRF9SRVNVTFRfSU5WQUxJRF9UQVJH",
+            "RVQQAhIhCh1XT1JMRF9SRVNVTFRfQUxSRUFEWV9NQVJDSElORxADEhkKFVdP",
+            "UkxEX1JFU1VMVF9SRVNFUlZFRBAEEh4KGldPUkxEX1JFU1VMVF9JTlZBTElE",
+            "X09SREVSEAUSHgoaV09STERfUkVTVUxUX1dPUkxEX0NIQU5HRUQQBhIcChhX",
+            "T1JMRF9SRVNVTFRfVU5BVkFJTEFCTEUQBxIkCiBXT1JMRF9SRVNVTFRfSU5T",
+            "VUZGSUNJRU5UX1RST09QUxAIQkFaMGdpdGh1Yi5jb20vTnVtYmVyTWFuMS9z",
+            "bGctc2VydmVyL3Byb3RvO3Nlc3Npb25wYqoCDFNsZy5Qcm90b2NvbGIGcHJv",
+            "dG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Slg.Protocol.WorldMessageId), typeof(global::Slg.Protocol.WorldResult), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.MarchOrder), global::Slg.Protocol.MarchOrder.Parser, new[]{ "CommandId", "TargetTileId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldRequest), global::Slg.Protocol.WorldRequest.Parser, new[]{ "KnownInstance", "KnownRevision", "Order" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.MarchOrder), global::Slg.Protocol.MarchOrder.Parser, new[]{ "CommandId", "TargetTileId", "Troops" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldRequest), global::Slg.Protocol.WorldRequest.Parser, new[]{ "KnownInstance", "KnownRevision", "Order", "KnownBattleId" }, new[]{ "KnownBattleId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldCommand), global::Slg.Protocol.WorldCommand.Parser, new[]{ "Account", "Request" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldTile), global::Slg.Protocol.WorldTile.Parser, new[]{ "Id", "Q", "R", "Owner", "Home" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldMarch), global::Slg.Protocol.WorldMarch.Parser, new[]{ "Player", "SourceTileId", "TargetTileId", "ArrivesAtMs" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldSnapshot), global::Slg.Protocol.WorldSnapshot.Parser, new[]{ "Instance", "Revision", "YourPlayer", "Tiles", "Marches" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldReply), global::Slg.Protocol.WorldReply.Parser, new[]{ "Result", "ServerTimeMs", "Snapshot" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldTile), global::Slg.Protocol.WorldTile.Parser, new[]{ "Id", "Q", "R", "Owner", "Home", "Garrison" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldMarch), global::Slg.Protocol.WorldMarch.Parser, new[]{ "Player", "SourceTileId", "TargetTileId", "ArrivesAtMs", "Troops", "Hostile" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldBattleReport), global::Slg.Protocol.WorldBattleReport.Parser, new[]{ "BattleId", "TargetTileId", "Attacker", "Defender", "AttackerTroops", "DefenderTroops", "AttackerSurvivors", "DefenderSurvivors", "Captured", "RuleVersion", "Seed" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldSnapshot), global::Slg.Protocol.WorldSnapshot.Parser, new[]{ "Instance", "Revision", "YourPlayer", "Tiles", "Marches", "AvailableTroops", "TroopCapacity", "LastBattle" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldReply), global::Slg.Protocol.WorldReply.Parser, new[]{ "Result", "ServerTimeMs", "Snapshot", "AvailableTroops", "BattleReports" }, new[]{ "AvailableTroops" }, null, null, null)
           }));
     }
     #endregion
@@ -82,6 +97,7 @@ namespace Slg.Protocol {
     [pbr::OriginalName("WORLD_RESULT_INVALID_ORDER")] InvalidOrder = 5,
     [pbr::OriginalName("WORLD_RESULT_WORLD_CHANGED")] WorldChanged = 6,
     [pbr::OriginalName("WORLD_RESULT_UNAVAILABLE")] Unavailable = 7,
+    [pbr::OriginalName("WORLD_RESULT_INSUFFICIENT_TROOPS")] InsufficientTroops = 8,
   }
 
   #endregion
@@ -127,6 +143,7 @@ namespace Slg.Protocol {
     public MarchOrder(MarchOrder other) : this() {
       commandId_ = other.commandId_;
       targetTileId_ = other.targetTileId_;
+      troops_ = other.troops_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -160,6 +177,21 @@ namespace Slg.Protocol {
       }
     }
 
+    /// <summary>Field number for the "troops" field.</summary>
+    public const int TroopsFieldNumber = 3;
+    private uint troops_;
+    /// <summary>
+    /// 省略时派出默认兵力，兼容已有客户端。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Troops {
+      get { return troops_; }
+      set {
+        troops_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -177,6 +209,7 @@ namespace Slg.Protocol {
       }
       if (CommandId != other.CommandId) return false;
       if (TargetTileId != other.TargetTileId) return false;
+      if (Troops != other.Troops) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -186,6 +219,7 @@ namespace Slg.Protocol {
       int hash = 1;
       if (CommandId.Length != 0) hash ^= CommandId.GetHashCode();
       if (TargetTileId != 0) hash ^= TargetTileId.GetHashCode();
+      if (Troops != 0) hash ^= Troops.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -212,6 +246,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(16);
         output.WriteUInt32(TargetTileId);
       }
+      if (Troops != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(Troops);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -230,6 +268,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(16);
         output.WriteUInt32(TargetTileId);
       }
+      if (Troops != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(Troops);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -245,6 +287,9 @@ namespace Slg.Protocol {
       }
       if (TargetTileId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(TargetTileId);
+      }
+      if (Troops != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Troops);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -263,6 +308,9 @@ namespace Slg.Protocol {
       }
       if (other.TargetTileId != 0) {
         TargetTileId = other.TargetTileId;
+      }
+      if (other.Troops != 0) {
+        Troops = other.Troops;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -289,6 +337,10 @@ namespace Slg.Protocol {
           }
           case 16: {
             TargetTileId = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            Troops = input.ReadUInt32();
             break;
           }
         }
@@ -318,6 +370,10 @@ namespace Slg.Protocol {
             TargetTileId = input.ReadUInt32();
             break;
           }
+          case 24: {
+            Troops = input.ReadUInt32();
+            break;
+          }
         }
       }
     }
@@ -336,6 +392,7 @@ namespace Slg.Protocol {
   {
     private static readonly pb::MessageParser<WorldRequest> _parser = new pb::MessageParser<WorldRequest>(() => new WorldRequest());
     private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<WorldRequest> Parser { get { return _parser; } }
@@ -363,9 +420,11 @@ namespace Slg.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public WorldRequest(WorldRequest other) : this() {
+      _hasBits0 = other._hasBits0;
       knownInstance_ = other.knownInstance_;
       knownRevision_ = other.knownRevision_;
       order_ = other.order_ != null ? other.order_.Clone() : null;
+      knownBattleId_ = other.knownBattleId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -411,6 +470,36 @@ namespace Slg.Protocol {
       }
     }
 
+    /// <summary>Field number for the "known_battle_id" field.</summary>
+    public const int KnownBattleIdFieldNumber = 4;
+    private readonly static ulong KnownBattleIdDefaultValue = 0UL;
+
+    private ulong knownBattleId_;
+    /// <summary>
+    /// 支持增量同步的客户端始终携带游标，首次进入时为 0。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong KnownBattleId {
+      get { if ((_hasBits0 & 1) != 0) { return knownBattleId_; } else { return KnownBattleIdDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        knownBattleId_ = value;
+      }
+    }
+    /// <summary>Gets whether the "known_battle_id" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasKnownBattleId {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "known_battle_id" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearKnownBattleId() {
+      _hasBits0 &= ~1;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -429,6 +518,7 @@ namespace Slg.Protocol {
       if (KnownInstance != other.KnownInstance) return false;
       if (KnownRevision != other.KnownRevision) return false;
       if (!object.Equals(Order, other.Order)) return false;
+      if (KnownBattleId != other.KnownBattleId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -439,6 +529,7 @@ namespace Slg.Protocol {
       if (KnownInstance.Length != 0) hash ^= KnownInstance.GetHashCode();
       if (KnownRevision != 0UL) hash ^= KnownRevision.GetHashCode();
       if (order_ != null) hash ^= Order.GetHashCode();
+      if (HasKnownBattleId) hash ^= KnownBattleId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -469,6 +560,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(26);
         output.WriteMessage(Order);
       }
+      if (HasKnownBattleId) {
+        output.WriteRawTag(32);
+        output.WriteUInt64(KnownBattleId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -491,6 +586,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(26);
         output.WriteMessage(Order);
       }
+      if (HasKnownBattleId) {
+        output.WriteRawTag(32);
+        output.WriteUInt64(KnownBattleId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -509,6 +608,9 @@ namespace Slg.Protocol {
       }
       if (order_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Order);
+      }
+      if (HasKnownBattleId) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(KnownBattleId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -533,6 +635,9 @@ namespace Slg.Protocol {
           Order = new global::Slg.Protocol.MarchOrder();
         }
         Order.MergeFrom(other.Order);
+      }
+      if (other.HasKnownBattleId) {
+        KnownBattleId = other.KnownBattleId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -568,6 +673,10 @@ namespace Slg.Protocol {
             input.ReadMessage(Order);
             break;
           }
+          case 32: {
+            KnownBattleId = input.ReadUInt64();
+            break;
+          }
         }
       }
     #endif
@@ -600,6 +709,10 @@ namespace Slg.Protocol {
               Order = new global::Slg.Protocol.MarchOrder();
             }
             input.ReadMessage(Order);
+            break;
+          }
+          case 32: {
+            KnownBattleId = input.ReadUInt64();
             break;
           }
         }
@@ -896,6 +1009,7 @@ namespace Slg.Protocol {
       r_ = other.r_;
       owner_ = other.owner_;
       home_ = other.home_;
+      garrison_ = other.garrison_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -965,6 +1079,18 @@ namespace Slg.Protocol {
       }
     }
 
+    /// <summary>Field number for the "garrison" field.</summary>
+    public const int GarrisonFieldNumber = 6;
+    private uint garrison_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Garrison {
+      get { return garrison_; }
+      set {
+        garrison_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -985,6 +1111,7 @@ namespace Slg.Protocol {
       if (R != other.R) return false;
       if (Owner != other.Owner) return false;
       if (Home != other.Home) return false;
+      if (Garrison != other.Garrison) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -997,6 +1124,7 @@ namespace Slg.Protocol {
       if (R != 0) hash ^= R.GetHashCode();
       if (Owner != 0) hash ^= Owner.GetHashCode();
       if (Home != 0) hash ^= Home.GetHashCode();
+      if (Garrison != 0) hash ^= Garrison.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1035,6 +1163,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(40);
         output.WriteUInt32(Home);
       }
+      if (Garrison != 0) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(Garrison);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1065,6 +1197,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(40);
         output.WriteUInt32(Home);
       }
+      if (Garrison != 0) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(Garrison);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1089,6 +1225,9 @@ namespace Slg.Protocol {
       }
       if (Home != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Home);
+      }
+      if (Garrison != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Garrison);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1116,6 +1255,9 @@ namespace Slg.Protocol {
       }
       if (other.Home != 0) {
         Home = other.Home;
+      }
+      if (other.Garrison != 0) {
+        Garrison = other.Garrison;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1156,6 +1298,10 @@ namespace Slg.Protocol {
             Home = input.ReadUInt32();
             break;
           }
+          case 48: {
+            Garrison = input.ReadUInt32();
+            break;
+          }
         }
       }
     #endif
@@ -1193,6 +1339,10 @@ namespace Slg.Protocol {
           }
           case 40: {
             Home = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            Garrison = input.ReadUInt32();
             break;
           }
         }
@@ -1241,6 +1391,8 @@ namespace Slg.Protocol {
       sourceTileId_ = other.sourceTileId_;
       targetTileId_ = other.targetTileId_;
       arrivesAtMs_ = other.arrivesAtMs_;
+      troops_ = other.troops_;
+      hostile_ = other.hostile_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1298,6 +1450,30 @@ namespace Slg.Protocol {
       }
     }
 
+    /// <summary>Field number for the "troops" field.</summary>
+    public const int TroopsFieldNumber = 5;
+    private uint troops_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Troops {
+      get { return troops_; }
+      set {
+        troops_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "hostile" field.</summary>
+    public const int HostileFieldNumber = 6;
+    private bool hostile_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Hostile {
+      get { return hostile_; }
+      set {
+        hostile_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1317,6 +1493,8 @@ namespace Slg.Protocol {
       if (SourceTileId != other.SourceTileId) return false;
       if (TargetTileId != other.TargetTileId) return false;
       if (ArrivesAtMs != other.ArrivesAtMs) return false;
+      if (Troops != other.Troops) return false;
+      if (Hostile != other.Hostile) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1328,6 +1506,8 @@ namespace Slg.Protocol {
       if (SourceTileId != 0) hash ^= SourceTileId.GetHashCode();
       if (TargetTileId != 0) hash ^= TargetTileId.GetHashCode();
       if (ArrivesAtMs != 0L) hash ^= ArrivesAtMs.GetHashCode();
+      if (Troops != 0) hash ^= Troops.GetHashCode();
+      if (Hostile != false) hash ^= Hostile.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1362,6 +1542,14 @@ namespace Slg.Protocol {
         output.WriteRawTag(32);
         output.WriteInt64(ArrivesAtMs);
       }
+      if (Troops != 0) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(Troops);
+      }
+      if (Hostile != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(Hostile);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1388,6 +1576,14 @@ namespace Slg.Protocol {
         output.WriteRawTag(32);
         output.WriteInt64(ArrivesAtMs);
       }
+      if (Troops != 0) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(Troops);
+      }
+      if (Hostile != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(Hostile);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1409,6 +1605,12 @@ namespace Slg.Protocol {
       }
       if (ArrivesAtMs != 0L) {
         size += 1 + pb::CodedOutputStream.ComputeInt64Size(ArrivesAtMs);
+      }
+      if (Troops != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Troops);
+      }
+      if (Hostile != false) {
+        size += 1 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1433,6 +1635,12 @@ namespace Slg.Protocol {
       }
       if (other.ArrivesAtMs != 0L) {
         ArrivesAtMs = other.ArrivesAtMs;
+      }
+      if (other.Troops != 0) {
+        Troops = other.Troops;
+      }
+      if (other.Hostile != false) {
+        Hostile = other.Hostile;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1467,6 +1675,14 @@ namespace Slg.Protocol {
           }
           case 32: {
             ArrivesAtMs = input.ReadInt64();
+            break;
+          }
+          case 40: {
+            Troops = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            Hostile = input.ReadBool();
             break;
           }
         }
@@ -1504,6 +1720,582 @@ namespace Slg.Protocol {
             ArrivesAtMs = input.ReadInt64();
             break;
           }
+          case 40: {
+            Troops = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            Hostile = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class WorldBattleReport : pb::IMessage<WorldBattleReport>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<WorldBattleReport> _parser = new pb::MessageParser<WorldBattleReport>(() => new WorldBattleReport());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<WorldBattleReport> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[5]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public WorldBattleReport() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public WorldBattleReport(WorldBattleReport other) : this() {
+      battleId_ = other.battleId_;
+      targetTileId_ = other.targetTileId_;
+      attacker_ = other.attacker_;
+      defender_ = other.defender_;
+      attackerTroops_ = other.attackerTroops_;
+      defenderTroops_ = other.defenderTroops_;
+      attackerSurvivors_ = other.attackerSurvivors_;
+      defenderSurvivors_ = other.defenderSurvivors_;
+      captured_ = other.captured_;
+      ruleVersion_ = other.ruleVersion_;
+      seed_ = other.seed_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public WorldBattleReport Clone() {
+      return new WorldBattleReport(this);
+    }
+
+    /// <summary>Field number for the "battle_id" field.</summary>
+    public const int BattleIdFieldNumber = 1;
+    private ulong battleId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong BattleId {
+      get { return battleId_; }
+      set {
+        battleId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "target_tile_id" field.</summary>
+    public const int TargetTileIdFieldNumber = 2;
+    private uint targetTileId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint TargetTileId {
+      get { return targetTileId_; }
+      set {
+        targetTileId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "attacker" field.</summary>
+    public const int AttackerFieldNumber = 3;
+    private uint attacker_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Attacker {
+      get { return attacker_; }
+      set {
+        attacker_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "defender" field.</summary>
+    public const int DefenderFieldNumber = 4;
+    private uint defender_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Defender {
+      get { return defender_; }
+      set {
+        defender_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "attacker_troops" field.</summary>
+    public const int AttackerTroopsFieldNumber = 5;
+    private uint attackerTroops_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint AttackerTroops {
+      get { return attackerTroops_; }
+      set {
+        attackerTroops_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "defender_troops" field.</summary>
+    public const int DefenderTroopsFieldNumber = 6;
+    private uint defenderTroops_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint DefenderTroops {
+      get { return defenderTroops_; }
+      set {
+        defenderTroops_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "attacker_survivors" field.</summary>
+    public const int AttackerSurvivorsFieldNumber = 7;
+    private uint attackerSurvivors_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint AttackerSurvivors {
+      get { return attackerSurvivors_; }
+      set {
+        attackerSurvivors_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "defender_survivors" field.</summary>
+    public const int DefenderSurvivorsFieldNumber = 8;
+    private uint defenderSurvivors_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint DefenderSurvivors {
+      get { return defenderSurvivors_; }
+      set {
+        defenderSurvivors_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "captured" field.</summary>
+    public const int CapturedFieldNumber = 9;
+    private bool captured_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Captured {
+      get { return captured_; }
+      set {
+        captured_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "rule_version" field.</summary>
+    public const int RuleVersionFieldNumber = 10;
+    private uint ruleVersion_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint RuleVersion {
+      get { return ruleVersion_; }
+      set {
+        ruleVersion_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "seed" field.</summary>
+    public const int SeedFieldNumber = 11;
+    private ulong seed_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong Seed {
+      get { return seed_; }
+      set {
+        seed_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as WorldBattleReport);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(WorldBattleReport other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (BattleId != other.BattleId) return false;
+      if (TargetTileId != other.TargetTileId) return false;
+      if (Attacker != other.Attacker) return false;
+      if (Defender != other.Defender) return false;
+      if (AttackerTroops != other.AttackerTroops) return false;
+      if (DefenderTroops != other.DefenderTroops) return false;
+      if (AttackerSurvivors != other.AttackerSurvivors) return false;
+      if (DefenderSurvivors != other.DefenderSurvivors) return false;
+      if (Captured != other.Captured) return false;
+      if (RuleVersion != other.RuleVersion) return false;
+      if (Seed != other.Seed) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (BattleId != 0UL) hash ^= BattleId.GetHashCode();
+      if (TargetTileId != 0) hash ^= TargetTileId.GetHashCode();
+      if (Attacker != 0) hash ^= Attacker.GetHashCode();
+      if (Defender != 0) hash ^= Defender.GetHashCode();
+      if (AttackerTroops != 0) hash ^= AttackerTroops.GetHashCode();
+      if (DefenderTroops != 0) hash ^= DefenderTroops.GetHashCode();
+      if (AttackerSurvivors != 0) hash ^= AttackerSurvivors.GetHashCode();
+      if (DefenderSurvivors != 0) hash ^= DefenderSurvivors.GetHashCode();
+      if (Captured != false) hash ^= Captured.GetHashCode();
+      if (RuleVersion != 0) hash ^= RuleVersion.GetHashCode();
+      if (Seed != 0UL) hash ^= Seed.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (BattleId != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(BattleId);
+      }
+      if (TargetTileId != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(TargetTileId);
+      }
+      if (Attacker != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(Attacker);
+      }
+      if (Defender != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(Defender);
+      }
+      if (AttackerTroops != 0) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(AttackerTroops);
+      }
+      if (DefenderTroops != 0) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(DefenderTroops);
+      }
+      if (AttackerSurvivors != 0) {
+        output.WriteRawTag(56);
+        output.WriteUInt32(AttackerSurvivors);
+      }
+      if (DefenderSurvivors != 0) {
+        output.WriteRawTag(64);
+        output.WriteUInt32(DefenderSurvivors);
+      }
+      if (Captured != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(Captured);
+      }
+      if (RuleVersion != 0) {
+        output.WriteRawTag(80);
+        output.WriteUInt32(RuleVersion);
+      }
+      if (Seed != 0UL) {
+        output.WriteRawTag(88);
+        output.WriteUInt64(Seed);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (BattleId != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(BattleId);
+      }
+      if (TargetTileId != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(TargetTileId);
+      }
+      if (Attacker != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(Attacker);
+      }
+      if (Defender != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(Defender);
+      }
+      if (AttackerTroops != 0) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(AttackerTroops);
+      }
+      if (DefenderTroops != 0) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(DefenderTroops);
+      }
+      if (AttackerSurvivors != 0) {
+        output.WriteRawTag(56);
+        output.WriteUInt32(AttackerSurvivors);
+      }
+      if (DefenderSurvivors != 0) {
+        output.WriteRawTag(64);
+        output.WriteUInt32(DefenderSurvivors);
+      }
+      if (Captured != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(Captured);
+      }
+      if (RuleVersion != 0) {
+        output.WriteRawTag(80);
+        output.WriteUInt32(RuleVersion);
+      }
+      if (Seed != 0UL) {
+        output.WriteRawTag(88);
+        output.WriteUInt64(Seed);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (BattleId != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(BattleId);
+      }
+      if (TargetTileId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(TargetTileId);
+      }
+      if (Attacker != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Attacker);
+      }
+      if (Defender != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Defender);
+      }
+      if (AttackerTroops != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(AttackerTroops);
+      }
+      if (DefenderTroops != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(DefenderTroops);
+      }
+      if (AttackerSurvivors != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(AttackerSurvivors);
+      }
+      if (DefenderSurvivors != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(DefenderSurvivors);
+      }
+      if (Captured != false) {
+        size += 1 + 1;
+      }
+      if (RuleVersion != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(RuleVersion);
+      }
+      if (Seed != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(Seed);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(WorldBattleReport other) {
+      if (other == null) {
+        return;
+      }
+      if (other.BattleId != 0UL) {
+        BattleId = other.BattleId;
+      }
+      if (other.TargetTileId != 0) {
+        TargetTileId = other.TargetTileId;
+      }
+      if (other.Attacker != 0) {
+        Attacker = other.Attacker;
+      }
+      if (other.Defender != 0) {
+        Defender = other.Defender;
+      }
+      if (other.AttackerTroops != 0) {
+        AttackerTroops = other.AttackerTroops;
+      }
+      if (other.DefenderTroops != 0) {
+        DefenderTroops = other.DefenderTroops;
+      }
+      if (other.AttackerSurvivors != 0) {
+        AttackerSurvivors = other.AttackerSurvivors;
+      }
+      if (other.DefenderSurvivors != 0) {
+        DefenderSurvivors = other.DefenderSurvivors;
+      }
+      if (other.Captured != false) {
+        Captured = other.Captured;
+      }
+      if (other.RuleVersion != 0) {
+        RuleVersion = other.RuleVersion;
+      }
+      if (other.Seed != 0UL) {
+        Seed = other.Seed;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            BattleId = input.ReadUInt64();
+            break;
+          }
+          case 16: {
+            TargetTileId = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            Attacker = input.ReadUInt32();
+            break;
+          }
+          case 32: {
+            Defender = input.ReadUInt32();
+            break;
+          }
+          case 40: {
+            AttackerTroops = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            DefenderTroops = input.ReadUInt32();
+            break;
+          }
+          case 56: {
+            AttackerSurvivors = input.ReadUInt32();
+            break;
+          }
+          case 64: {
+            DefenderSurvivors = input.ReadUInt32();
+            break;
+          }
+          case 72: {
+            Captured = input.ReadBool();
+            break;
+          }
+          case 80: {
+            RuleVersion = input.ReadUInt32();
+            break;
+          }
+          case 88: {
+            Seed = input.ReadUInt64();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            BattleId = input.ReadUInt64();
+            break;
+          }
+          case 16: {
+            TargetTileId = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            Attacker = input.ReadUInt32();
+            break;
+          }
+          case 32: {
+            Defender = input.ReadUInt32();
+            break;
+          }
+          case 40: {
+            AttackerTroops = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            DefenderTroops = input.ReadUInt32();
+            break;
+          }
+          case 56: {
+            AttackerSurvivors = input.ReadUInt32();
+            break;
+          }
+          case 64: {
+            DefenderSurvivors = input.ReadUInt32();
+            break;
+          }
+          case 72: {
+            Captured = input.ReadBool();
+            break;
+          }
+          case 80: {
+            RuleVersion = input.ReadUInt32();
+            break;
+          }
+          case 88: {
+            Seed = input.ReadUInt64();
+            break;
+          }
         }
       }
     }
@@ -1526,7 +2318,7 @@ namespace Slg.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1551,6 +2343,9 @@ namespace Slg.Protocol {
       yourPlayer_ = other.yourPlayer_;
       tiles_ = other.tiles_.Clone();
       marches_ = other.marches_.Clone();
+      availableTroops_ = other.availableTroops_;
+      troopCapacity_ = other.troopCapacity_;
+      lastBattle_ = other.lastBattle_ != null ? other.lastBattle_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1618,6 +2413,42 @@ namespace Slg.Protocol {
       get { return marches_; }
     }
 
+    /// <summary>Field number for the "available_troops" field.</summary>
+    public const int AvailableTroopsFieldNumber = 6;
+    private uint availableTroops_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint AvailableTroops {
+      get { return availableTroops_; }
+      set {
+        availableTroops_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "troop_capacity" field.</summary>
+    public const int TroopCapacityFieldNumber = 7;
+    private uint troopCapacity_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint TroopCapacity {
+      get { return troopCapacity_; }
+      set {
+        troopCapacity_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "last_battle" field.</summary>
+    public const int LastBattleFieldNumber = 8;
+    private global::Slg.Protocol.WorldBattleReport lastBattle_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Slg.Protocol.WorldBattleReport LastBattle {
+      get { return lastBattle_; }
+      set {
+        lastBattle_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1638,6 +2469,9 @@ namespace Slg.Protocol {
       if (YourPlayer != other.YourPlayer) return false;
       if(!tiles_.Equals(other.tiles_)) return false;
       if(!marches_.Equals(other.marches_)) return false;
+      if (AvailableTroops != other.AvailableTroops) return false;
+      if (TroopCapacity != other.TroopCapacity) return false;
+      if (!object.Equals(LastBattle, other.LastBattle)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1650,6 +2484,9 @@ namespace Slg.Protocol {
       if (YourPlayer != 0) hash ^= YourPlayer.GetHashCode();
       hash ^= tiles_.GetHashCode();
       hash ^= marches_.GetHashCode();
+      if (AvailableTroops != 0) hash ^= AvailableTroops.GetHashCode();
+      if (TroopCapacity != 0) hash ^= TroopCapacity.GetHashCode();
+      if (lastBattle_ != null) hash ^= LastBattle.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1682,6 +2519,18 @@ namespace Slg.Protocol {
       }
       tiles_.WriteTo(output, _repeated_tiles_codec);
       marches_.WriteTo(output, _repeated_marches_codec);
+      if (AvailableTroops != 0) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(AvailableTroops);
+      }
+      if (TroopCapacity != 0) {
+        output.WriteRawTag(56);
+        output.WriteUInt32(TroopCapacity);
+      }
+      if (lastBattle_ != null) {
+        output.WriteRawTag(66);
+        output.WriteMessage(LastBattle);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1706,6 +2555,18 @@ namespace Slg.Protocol {
       }
       tiles_.WriteTo(ref output, _repeated_tiles_codec);
       marches_.WriteTo(ref output, _repeated_marches_codec);
+      if (AvailableTroops != 0) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(AvailableTroops);
+      }
+      if (TroopCapacity != 0) {
+        output.WriteRawTag(56);
+        output.WriteUInt32(TroopCapacity);
+      }
+      if (lastBattle_ != null) {
+        output.WriteRawTag(66);
+        output.WriteMessage(LastBattle);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1727,6 +2588,15 @@ namespace Slg.Protocol {
       }
       size += tiles_.CalculateSize(_repeated_tiles_codec);
       size += marches_.CalculateSize(_repeated_marches_codec);
+      if (AvailableTroops != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(AvailableTroops);
+      }
+      if (TroopCapacity != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(TroopCapacity);
+      }
+      if (lastBattle_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(LastBattle);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1750,6 +2620,18 @@ namespace Slg.Protocol {
       }
       tiles_.Add(other.tiles_);
       marches_.Add(other.marches_);
+      if (other.AvailableTroops != 0) {
+        AvailableTroops = other.AvailableTroops;
+      }
+      if (other.TroopCapacity != 0) {
+        TroopCapacity = other.TroopCapacity;
+      }
+      if (other.lastBattle_ != null) {
+        if (lastBattle_ == null) {
+          LastBattle = new global::Slg.Protocol.WorldBattleReport();
+        }
+        LastBattle.MergeFrom(other.LastBattle);
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1787,6 +2669,21 @@ namespace Slg.Protocol {
           }
           case 42: {
             marches_.AddEntriesFrom(input, _repeated_marches_codec);
+            break;
+          }
+          case 48: {
+            AvailableTroops = input.ReadUInt32();
+            break;
+          }
+          case 56: {
+            TroopCapacity = input.ReadUInt32();
+            break;
+          }
+          case 66: {
+            if (lastBattle_ == null) {
+              LastBattle = new global::Slg.Protocol.WorldBattleReport();
+            }
+            input.ReadMessage(LastBattle);
             break;
           }
         }
@@ -1828,6 +2725,21 @@ namespace Slg.Protocol {
             marches_.AddEntriesFrom(ref input, _repeated_marches_codec);
             break;
           }
+          case 48: {
+            AvailableTroops = input.ReadUInt32();
+            break;
+          }
+          case 56: {
+            TroopCapacity = input.ReadUInt32();
+            break;
+          }
+          case 66: {
+            if (lastBattle_ == null) {
+              LastBattle = new global::Slg.Protocol.WorldBattleReport();
+            }
+            input.ReadMessage(LastBattle);
+            break;
+          }
         }
       }
     }
@@ -1843,6 +2755,7 @@ namespace Slg.Protocol {
   {
     private static readonly pb::MessageParser<WorldReply> _parser = new pb::MessageParser<WorldReply>(() => new WorldReply());
     private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<WorldReply> Parser { get { return _parser; } }
@@ -1850,7 +2763,7 @@ namespace Slg.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1870,9 +2783,12 @@ namespace Slg.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public WorldReply(WorldReply other) : this() {
+      _hasBits0 = other._hasBits0;
       result_ = other.result_;
       serverTimeMs_ = other.serverTimeMs_;
       snapshot_ = other.snapshot_ != null ? other.snapshot_.Clone() : null;
+      availableTroops_ = other.availableTroops_;
+      battleReports_ = other.battleReports_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1921,6 +2837,47 @@ namespace Slg.Protocol {
       }
     }
 
+    /// <summary>Field number for the "available_troops" field.</summary>
+    public const int AvailableTroopsFieldNumber = 4;
+    private readonly static uint AvailableTroopsDefaultValue = 0;
+
+    private uint availableTroops_;
+    /// <summary>
+    /// 私有兵力独立更新，即使公共地图版本不变也会返回。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint AvailableTroops {
+      get { if ((_hasBits0 & 1) != 0) { return availableTroops_; } else { return AvailableTroopsDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        availableTroops_ = value;
+      }
+    }
+    /// <summary>Gets whether the "available_troops" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasAvailableTroops {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "available_troops" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearAvailableTroops() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "battle_reports" field.</summary>
+    public const int BattleReportsFieldNumber = 5;
+    private static readonly pb::FieldCodec<global::Slg.Protocol.WorldBattleReport> _repeated_battleReports_codec
+        = pb::FieldCodec.ForMessage(42, global::Slg.Protocol.WorldBattleReport.Parser);
+    private readonly pbc::RepeatedField<global::Slg.Protocol.WorldBattleReport> battleReports_ = new pbc::RepeatedField<global::Slg.Protocol.WorldBattleReport>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Slg.Protocol.WorldBattleReport> BattleReports {
+      get { return battleReports_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1939,6 +2896,8 @@ namespace Slg.Protocol {
       if (Result != other.Result) return false;
       if (ServerTimeMs != other.ServerTimeMs) return false;
       if (!object.Equals(Snapshot, other.Snapshot)) return false;
+      if (AvailableTroops != other.AvailableTroops) return false;
+      if(!battleReports_.Equals(other.battleReports_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1949,6 +2908,8 @@ namespace Slg.Protocol {
       if (Result != global::Slg.Protocol.WorldResult.Ok) hash ^= Result.GetHashCode();
       if (ServerTimeMs != 0L) hash ^= ServerTimeMs.GetHashCode();
       if (snapshot_ != null) hash ^= Snapshot.GetHashCode();
+      if (HasAvailableTroops) hash ^= AvailableTroops.GetHashCode();
+      hash ^= battleReports_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1979,6 +2940,11 @@ namespace Slg.Protocol {
         output.WriteRawTag(26);
         output.WriteMessage(Snapshot);
       }
+      if (HasAvailableTroops) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(AvailableTroops);
+      }
+      battleReports_.WriteTo(output, _repeated_battleReports_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2001,6 +2967,11 @@ namespace Slg.Protocol {
         output.WriteRawTag(26);
         output.WriteMessage(Snapshot);
       }
+      if (HasAvailableTroops) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(AvailableTroops);
+      }
+      battleReports_.WriteTo(ref output, _repeated_battleReports_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2020,6 +2991,10 @@ namespace Slg.Protocol {
       if (snapshot_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Snapshot);
       }
+      if (HasAvailableTroops) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(AvailableTroops);
+      }
+      size += battleReports_.CalculateSize(_repeated_battleReports_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -2044,6 +3019,10 @@ namespace Slg.Protocol {
         }
         Snapshot.MergeFrom(other.Snapshot);
       }
+      if (other.HasAvailableTroops) {
+        AvailableTroops = other.AvailableTroops;
+      }
+      battleReports_.Add(other.battleReports_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -2078,6 +3057,14 @@ namespace Slg.Protocol {
             input.ReadMessage(Snapshot);
             break;
           }
+          case 32: {
+            AvailableTroops = input.ReadUInt32();
+            break;
+          }
+          case 42: {
+            battleReports_.AddEntriesFrom(input, _repeated_battleReports_codec);
+            break;
+          }
         }
       }
     #endif
@@ -2110,6 +3097,14 @@ namespace Slg.Protocol {
               Snapshot = new global::Slg.Protocol.WorldSnapshot();
             }
             input.ReadMessage(Snapshot);
+            break;
+          }
+          case 32: {
+            AvailableTroops = input.ReadUInt32();
+            break;
+          }
+          case 42: {
+            battleReports_.AddEntriesFrom(ref input, _repeated_battleReports_codec);
             break;
           }
         }
