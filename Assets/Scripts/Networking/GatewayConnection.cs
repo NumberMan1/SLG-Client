@@ -1,6 +1,5 @@
 using System;
 using System.Buffers.Binary;
-using System.IO;
 #if !UNITY_WEBGL || UNITY_EDITOR
 using System.Net.Sockets;
 #endif
@@ -12,9 +11,17 @@ using UnityEngine.Networking;
 
 namespace Slg.Networking
 {
+    // 只将已经本地化的网关错误展示给玩家，系统异常由界面给出中文提示。
+    internal sealed class GatewayException : Exception
+    {
+        internal GatewayException(string message, Exception inner = null) : base(message, inner) { }
+    }
+
     /// <summary>持有通过网关认证的长连接，原生端使用 TCP，网页端使用 WebSocket。</summary>
     public sealed partial class GatewayConnection : IDisposable
     {
+        internal const string RegistrationLengthMessage = "账号和密码均须为 1～8 个字符。";
+
         // Orbit 帧头包含负载长度、消息类型、序号和错误码，整数按大端序编码。
         private const int HeaderSize = 10;
         private const int MaxPayload = 1024;
@@ -31,12 +38,12 @@ namespace Slg.Networking
         {
             if (worldRequestPending)
             {
-                throw new InvalidOperationException("A world request is already in progress.");
+                throw new GatewayException("上一条世界请求尚未完成。");
             }
             var payload = request.ToByteArray();
             if (payload.Length > MaxPayload)
             {
-                throw new InvalidDataException("World request exceeds the frame limit.");
+                throw new GatewayException("世界请求的数据过大。");
             }
             var sequence = ++nextSequence;
             if (sequence == 0) sequence = ++nextSequence;
@@ -65,7 +72,7 @@ namespace Slg.Networking
                 BinaryPrimitives.ReadUInt32BigEndian(header.Slice(4, 4)) != sequence ||
                 BinaryPrimitives.ReadUInt16BigEndian(header.Slice(8, 2)) != 0)
             {
-                throw new InvalidDataException("Gateway returned an invalid world reply.");
+                throw new GatewayException("网关返回的世界数据无效。");
             }
             return length;
         }
@@ -86,7 +93,7 @@ namespace Slg.Networking
             var login = await RequestTicketAsync(gateway, account, password);
             if (string.IsNullOrEmpty(login.Ticket) || login.TcpPort == 0 || login.TcpPort > 65535)
             {
-                throw new InvalidDataException("Gateway returned an invalid login reply.");
+                throw new GatewayException("网关返回的登录响应无效。");
             }
 
             var tcp = new TcpClient { NoDelay = true };
@@ -101,10 +108,7 @@ namespace Slg.Networking
                 await SendConnectAsync(stream, request, timeout.Token);
                 var reply = await ReadConnectAsync(stream, timeout.Token);
                 timeout.Token.ThrowIfCancellationRequested();
-                if (reply.Account != account || reply.SessionId == 0)
-                {
-                    throw new InvalidDataException("Gateway returned an invalid session.");
-                }
+                ValidateSession(reply, account);
                 return new GatewayConnection(tcp, reply);
             }
             catch (Exception error)
@@ -112,7 +116,7 @@ namespace Slg.Networking
                 tcp.Dispose();
                 if (timeout.IsCancellationRequested)
                 {
-                    throw new TimeoutException("TCP authentication timed out.", error);
+                    throw new GatewayException("连接认证超时，请重试。", error);
                 }
                 throw;
             }
@@ -127,13 +131,14 @@ namespace Slg.Networking
             await SendCredentialRequestAsync(request);
             if (request.result != UnityWebRequest.Result.Success || request.responseCode != 201)
             {
-                throw new InvalidOperationException(request.responseCode switch
+                throw new GatewayException(request.responseCode switch
                 {
-                    400 => "Use an account of up to 64 UTF-8 bytes and a password of at least 8 characters (up to 72 UTF-8 bytes).",
-                    409 => "This account already exists. Choose another name or sign in.",
-                    429 => "Too many registration requests. Try again shortly.",
-                    503 => "Registration is temporarily unavailable. Try again shortly.",
-                    _ => $"Registration failed (HTTP {request.responseCode}): {request.error}"
+                    400 => RegistrationLengthMessage,
+                    0 => "无法连接网关，请检查地址和网络。",
+                    409 => "账号已存在，请更换账号或直接登录。",
+                    429 => "注册请求过于频繁，请稍后重试。",
+                    503 => "注册服务暂不可用，请稍后重试。",
+                    _ => $"注册失败（HTTP {request.responseCode}）。"
                 });
             }
         }
@@ -143,9 +148,17 @@ namespace Slg.Networking
             if (!Uri.TryCreate(gatewayUrl, UriKind.Absolute, out var gateway) ||
                 (gateway.Scheme != "http" && gateway.Scheme != "https"))
             {
-                throw new ArgumentException("Gateway URL must use HTTP or HTTPS.");
+                throw new GatewayException("网关地址必须以 http:// 或 https:// 开头。");
             }
             return gateway;
+        }
+
+        private static void ValidateSession(ConnectReply reply, string account)
+        {
+            if (reply.SessionId == 0 || reply.Account != account)
+            {
+                throw new GatewayException("网关返回的会话信息无效。");
+            }
         }
 
         private static async Task<LoginReply> RequestTicketAsync(Uri gateway, string account, string password)
@@ -155,10 +168,14 @@ namespace Slg.Networking
             await SendCredentialRequestAsync(request);
             if (request.result != UnityWebRequest.Result.Success || request.responseCode != 200)
             {
-                string message = request.responseCode == 401
-                    ? "Account or password is incorrect. You can create an account below."
-                    : $"Login failed (HTTP {request.responseCode}): {request.error}";
-                throw new InvalidOperationException(message);
+                string message = request.responseCode switch
+                {
+                    0 => "无法连接网关，请检查地址和网络。",
+                    401 => "账号或密码错误。新玩家可选择「注册账号」。",
+                    503 => "登录服务暂不可用，请稍后重试。",
+                    _ => $"登录失败（HTTP {request.responseCode}）。"
+                };
+                throw new GatewayException(message);
             }
             return LoginReply.Parser.ParseFrom(request.downloadHandler.data);
         }
@@ -190,7 +207,7 @@ namespace Slg.Networking
             var payload = request.ToByteArray();
             if (payload.Length > MaxPayload)
             {
-                throw new InvalidDataException("Connect request exceeds the frame limit.");
+                throw new GatewayException("连接请求的数据过大。");
             }
             var frame = new byte[HeaderSize + payload.Length];
             BinaryPrimitives.WriteUInt16BigEndian(frame.AsSpan(0, 2), (ushort)payload.Length);
@@ -210,7 +227,7 @@ namespace Slg.Networking
                 BinaryPrimitives.ReadUInt32BigEndian(header.AsSpan(4, 4)) != ConnectSequence ||
                 BinaryPrimitives.ReadUInt16BigEndian(header.AsSpan(8, 2)) != 0)
             {
-                throw new InvalidDataException("Gateway returned an invalid connect frame.");
+                throw new GatewayException("网关返回的认证响应无效。");
             }
             var payload = new byte[size];
             await ReadExactlyAsync(stream, payload, token);
@@ -226,7 +243,7 @@ namespace Slg.Networking
                 int count = await stream.ReadAsync(buffer, offset, buffer.Length - offset, token);
                 if (count == 0)
                 {
-                    throw new EndOfStreamException("Gateway closed the TCP connection before the frame was complete.");
+                    throw new GatewayException("数据接收完成前连接已断开。");
                 }
                 offset += count;
             }

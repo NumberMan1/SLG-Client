@@ -24,13 +24,13 @@ namespace Slg.Networking
             if (request.result != UnityWebRequest.Result.Success || request.responseCode != 200)
             {
                 throw new InvalidOperationException(
-                    $"Gateway request failed (HTTP {request.responseCode}): {request.error}");
+                    $"网关健康检查失败（HTTP {request.responseCode}）。");
             }
 
             var health = JsonUtility.FromJson<HealthResponse>(request.downloadHandler.text);
             if (health?.service != "game-server" || health.status != "ok")
             {
-                throw new InvalidOperationException("Gateway returned an unexpected game-server health response.");
+                throw new InvalidOperationException("网关返回的游戏服健康状态无效。");
             }
         }
 

@@ -64,7 +64,7 @@ namespace Slg
                 }
             }
 
-            mesh = new Mesh { name = "Frontier terrain", hideFlags = HideFlags.HideAndDontSave };
+            mesh = new Mesh { name = "边境地形", hideFlags = HideFlags.HideAndDontSave };
             mesh.SetVertices(vertices);
             // 每种地形材质对应一个子网格，预览由同一个 MeshRenderer 绘制。
             mesh.subMeshCount = faces.Length;

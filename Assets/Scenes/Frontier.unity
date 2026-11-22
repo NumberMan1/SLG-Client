@@ -148,8 +148,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c546b2c1e8bd244fac759ddd2d0a414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Slg.LoginScene
-  displayFont: {fileID: 12800000, guid: d4e6c61a583cc8946817c64a9dcb71f4, type: 3}
-  interfaceFont: {fileID: 12800000, guid: ea47708bf527e864a91bc1caa6194abc, type: 3}
+  displayFont: {fileID: 12800000, guid: 23a39222a35f4d90aeac7aa81967f4c1, type: 3}
+  interfaceFont: {fileID: 12800000, guid: 23a39222a35f4d90aeac7aa81967f4c1, type: 3}
 --- !u!4 &582826686
 Transform:
   m_ObjectHideFlags: 0

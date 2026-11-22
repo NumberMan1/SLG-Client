@@ -14,13 +14,15 @@
 
 ## 登录和 TCP 连接
 
-打开 `Assets/Scenes/Frontier.unity`，点击 **Play**，在 **Game** 视图查看地形和登录面板。按 SLG-Server 的 README 启动服务，输入账号和密码并点击 **Sign in**。网关默认地址是 `http://127.0.0.1:8080`，账号默认是 `demo`。认证成功后右侧显示共享地图。用两个账号分别登录，点击与己方领地相邻的中立格，双方可以看到行军倒计时和到达后的归属变化。若打包后通过本机明文 HTTP 联调，请构建 **Development Build**。
+打开 `Assets/Scenes/Frontier.unity`，点击 **Play**，在 **Game** 视图查看地形和登录面板。按 SLG-Server 的 README 启动服务，输入账号和密码并点击 **登录**。网关默认地址是 `http://127.0.0.1:8080`，账号默认是 `demo`。认证成功后右侧显示共享地图。用两个账号分别登录，点击与己方领地相邻的中立格，双方可以看到行军倒计时和到达后的归属变化。若打包后通过本机明文 HTTP 联调，请构建 **Development Build**。
+
+原生端和 WebGL 共用简体中文界面。`Assets/Fonts/SlgInterfaceSC.ttf` 是基于 Noto Sans SC 制作的项目字体，包含常用简体中文字形及界面用字，许可在同目录的 `NotoSansSC-OFL.txt`。 [Noto CJK](https://github.com/notofonts/noto-cjk)
 
 作品集以在线试玩网页作为主要入口，并提供实际玩法演示视频与两个代码仓库的链接。[SLG-Client](https://github.com/NumberMan1/SLG-Client) · [SLG-Server](https://github.com/NumberMan1/SLG-Server)
 
 ## 浏览器试玩
 
-在 Unity Hub 为 `6000.3.27f1` 添加 **Web Build Support**。在编辑器选择 **SLG → Build Web Player** 并选择输出目录，或用批处理入口 `Slg.EditorTools.BuildCiPlayer.BuildWeb`，传入 `-buildTarget WebGL -customBuildPath <输出目录>`。构建使用未压缩的 Web 文件，方便普通静态文件服务器托管。
+在 Unity Hub 为 `6000.3.27f1` 添加 **Web Build Support**。在编辑器选择 **SLG → 构建网页客户端** 并选择输出目录，或用批处理入口 `Slg.EditorTools.BuildCiPlayer.BuildWeb`，传入 `-buildTarget WebGL -customBuildPath <输出目录>`。构建使用未压缩的 Web 文件，方便普通静态文件服务器托管。
 
 网页启动后自动使用当前网页所在的域名和端口作为网关地址。HTTP 注册和登录分别使用 `/v1/register` 和 `/v1/login`。浏览器通过 `/v1/session` 建立二进制 WebSocket，HTTPS 网页自动选择 WSS。每个 WebSocket 消息包含一个完整 Orbit 帧。
 
@@ -30,17 +32,17 @@
 
 ### 编辑器冒烟检查
 
-玩家可在登录页选择 **Create account**，填写账号、密码和确认密码。注册成功后返回登录页，使用新账号登录。
+玩家可在登录页选择 **注册账号**，填写账号、密码和确认密码。账号和密码均须为 1 至 8 个 Unicode 字符。注册成功后返回登录页，使用新账号登录。
 
-执行编辑器冒烟检查时，在启动 Unity 的终端设置 `SLG_DEMO_PASSWORD` 为已有联调账号的密码，然后选择 **SLG → Verify Login and TCP Connection**。账号默认是 `demo`，可用 `SLG_DEMO_ACCOUNT` 指定。网关默认是 `http://127.0.0.1:8080`，可用 `SLG_CLIENT_GATEWAY_URL` 覆盖。
+执行编辑器冒烟检查时，在启动 Unity 的终端设置 `SLG_DEMO_PASSWORD` 为已有联调账号的密码，然后选择 **SLG → 验证登录和 TCP 连接**。账号默认是 `demo`，可用 `SLG_DEMO_ACCOUNT` 指定。网关默认是 `http://127.0.0.1:8080`，可用 `SLG_CLIENT_GATEWAY_URL` 覆盖。
 
-成功时 Console 显示 `SLG login and TCP smoke passed (session …)`。脚本完成 HTTP 登录、TCP 建连及认证回执校验，然后关闭测试连接。批处理入口是 `Slg.EditorTools.LoginSmoke.RunBatch`，可替换下面命令中的 `-executeMethod` 参数。
+成功时 Console 显示「登录和 TCP 验证通过」及会话编号。脚本完成 HTTP 登录、TCP 建连及认证回执校验，然后关闭测试连接。批处理入口是 `Slg.EditorTools.LoginSmoke.RunBatch`，可替换下面命令中的 `-executeMethod` 参数。
 
 Unity 插件包含 NuGet 的 `Google.Protobuf 3.33.0` 与 `System.Runtime.CompilerServices.Unsafe 4.5.2`，均使用 `netstandard2.0` 版本。生成代码通过服务端的 `scripts/generate-proto.sh` 更新。
 
 ## HTTP 健康检查
 
-按 SLG-Server 的 README 启动 C++ 游戏服和 Go 网关。然后在 Unity 编辑器中选择 **SLG → Verify Gateway Connection**。成功时，Console 会显示 `SLG gateway smoke passed (game-server: ok)`。默认访问 `http://127.0.0.1:8080/v1/game/health`。如需指定另一个网关，可用 `SLG_CLIENT_GATEWAY_URL` 覆盖。[SLG-Server 仓库](https://github.com/NumberMan1/SLG-Server)
+按 SLG-Server 的 README 启动 C++ 游戏服和 Go 网关。然后在 Unity 编辑器中选择 **SLG → 验证网关连接**。成功时，Console 会显示「网关连接验证通过，游戏服运行正常」。默认访问 `http://127.0.0.1:8080/v1/game/health`。如需指定另一个网关，可用 `SLG_CLIENT_GATEWAY_URL` 覆盖。[SLG-Server 仓库](https://github.com/NumberMan1/SLG-Server)
 
 也可以关闭该工程的编辑器窗口后，在客户端仓库根目录运行批处理检查。将命令中的编辑器路径替换为本机安装路径。检查完成时，成功退出码为 0，失败退出码为 1，细节记录在日志中。
 

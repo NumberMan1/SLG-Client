@@ -18,7 +18,7 @@ namespace Slg.EditorTools
         }
 
         /// <summary>构建 WebGL 客户端。批处理从参数读取输出目录，编辑器菜单会打开目录选择框。</summary>
-        [MenuItem("SLG/Build Web Player")]
+        [MenuItem("SLG/构建网页客户端")]
         public static void BuildWeb()
         {
             BuildPlayer(BuildTarget.WebGL);
@@ -28,7 +28,7 @@ namespace Slg.EditorTools
         {
             if (!BuildPipeline.IsBuildTargetSupported(BuildPipeline.GetBuildTargetGroup(target), target))
             {
-                throw new BuildFailedException($"Install {target} Build Support for this Unity editor in Unity Hub.");
+                throw new BuildFailedException($"请在 Unity Hub 为当前编辑器安装 {target} 构建模块。");
             }
             string[] args = Environment.GetCommandLineArgs();
             int pathIndex = Array.IndexOf(args, "-customBuildPath") + 1;
@@ -36,12 +36,12 @@ namespace Slg.EditorTools
             {
                 if (target == BuildTarget.WebGL && !Application.isBatchMode)
                 {
-                    string folder = EditorUtility.SaveFolderPanel("Build Web Player", "", "Frontier-Web");
+                    string folder = EditorUtility.SaveFolderPanel("选择网页客户端输出目录", "", "Frontier-Web");
                     if (string.IsNullOrEmpty(folder)) return;
                     BuildAtPath(target, folder);
                     return;
                 }
-                throw new BuildFailedException("Pass -customBuildPath with the player output path.");
+                throw new BuildFailedException("请通过 -customBuildPath 指定客户端输出路径。");
             }
 
             string path = Path.GetFullPath(args[pathIndex]);
@@ -52,7 +52,7 @@ namespace Slg.EditorTools
         {
             if (target == BuildTarget.StandaloneWindows64 && !string.Equals(Path.GetExtension(path), ".exe", StringComparison.OrdinalIgnoreCase))
             {
-                throw new BuildFailedException("The Windows player output path must end in .exe.");
+                throw new BuildFailedException("Windows 客户端输出路径须以 .exe 结尾。");
             }
 
             string[] scenes = EditorBuildSettings.scenes
@@ -61,7 +61,7 @@ namespace Slg.EditorTools
                 .ToArray();
             if (scenes.Length == 0)
             {
-                throw new BuildFailedException("Enable at least one scene in Unity Build Settings.");
+                throw new BuildFailedException("请在 Unity 构建设置中至少启用一个场景。");
             }
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -82,10 +82,10 @@ namespace Slg.EditorTools
             }
             if (report.summary.result != BuildResult.Succeeded)
             {
-                throw new BuildFailedException($"{target} player build ended with {report.summary.result}.");
+                throw new BuildFailedException($"{target} 客户端构建未成功。请查看构建日志。状态为 {report.summary.result}。");
             }
 
-            Debug.Log($"Built {target} development player at {path}.");
+            Debug.Log($"已生成 {target} 开发版客户端，输出目录为 {path}。");
         }
     }
 }

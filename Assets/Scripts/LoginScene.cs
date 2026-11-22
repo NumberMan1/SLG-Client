@@ -37,6 +37,7 @@ namespace Slg
         private GUIStyle title;
         private GUIStyle body;
         private GUIStyle label;
+        private GUIStyle sessionLabel;
         private GUIStyle input;
         private GUIStyle button;
         private GUIStyle secondaryButton;
@@ -68,32 +69,51 @@ namespace Slg
 
         private async void Register()
         {
+            var registrationAccount = account.Trim();
+            if (!HasRegistrationLength(registrationAccount) || !HasRegistrationLength(password))
+            {
+                status = GatewayConnection.RegistrationLengthMessage;
+                failed = true;
+                return;
+            }
             if (password != confirmedPassword)
             {
-                status = "The passwords do not match.";
+                status = "两次输入的密码不一致。";
                 failed = true;
                 return;
             }
             busy = true;
             failed = false;
-            status = "Creating account…";
+            status = "正在创建账号…";
             try
             {
-                await GatewayConnection.RegisterAsync(gateway.Trim(), account.Trim(), password);
+                await GatewayConnection.RegisterAsync(gateway.Trim(), registrationAccount, password);
                 if (!this) return;
                 ShowRegistration(false);
-                status = "Account created. Sign in with your new password.";
+                status = "账号已创建，请使用新密码登录。";
             }
             catch (Exception error)
             {
                 if (!this) return;
-                status = error.Message;
+                status = error is GatewayException ? error.Message : "注册失败，请检查网络或稍后重试。";
                 failed = true;
             }
             finally
             {
                 busy = false;
             }
+        }
+
+        private static bool HasRegistrationLength(string value)
+        {
+            int count = 0;
+            for (int index = 0; index < value.Length; index++)
+            {
+                // Unity 文本使用 UTF-16，代理对按一个 Unicode 字符计数，与服务端一致。
+                if (index + 1 < value.Length && char.IsSurrogatePair(value, index)) index++;
+                if (++count > 8) return false;
+            }
+            return count > 0;
         }
 
         private async void SignIn()
@@ -104,7 +124,7 @@ namespace Slg
             }
             busy = true;
             failed = false;
-            status = "Signing in…";
+            status = "正在登录…";
             try
             {
                 var opened = await GatewayConnection.LoginAsync(gateway.Trim(), account.Trim(), password);
@@ -120,12 +140,12 @@ namespace Slg
                     pendingMarch = null;
                 }
                 password = "";
-                status = "Connected";
+                status = "已连接";
                 WatchWorld(opened);
             }
             catch (Exception error)
             {
-                status = error.Message;
+                status = error is GatewayException ? error.Message : "登录失败，请检查网络或稍后重试。";
                 failed = true;
             }
             finally
@@ -170,7 +190,8 @@ namespace Slg
                 if (this && ReferenceEquals(connection, opened))
                 {
                     Disconnect(keepPendingMarch: true);
-                    status = pendingMarch.HasValue ? "Connection lost. Sign in again to check your march." : error.Message;
+                    status = pendingMarch.HasValue ? "连接已断开，请重新登录以确认行军。" :
+                        error is GatewayException ? error.Message : "游戏连接已断开，请重新登录。";
                     failed = true;
                 }
             }
@@ -189,7 +210,7 @@ namespace Slg
                 world = reply.Snapshot;
                 pendingMarch = null;
                 failed = false;
-                status = "The world changed. Choose a tile again.";
+                status = "世界实例已变更，请重新选择地块。";
                 return;
             }
             if (reply.Result == WorldResult.Full) world = null;
@@ -197,7 +218,7 @@ namespace Slg
             if (reply.Result == WorldResult.Unavailable)
             {
                 // 上游响应可能丢失，重试时沿用原指令 ID。
-                status = "World temporarily unavailable. Retrying…";
+                status = "暂时无法连接游戏世界，正在重试…";
                 failed = true;
                 return;
             }
@@ -206,12 +227,12 @@ namespace Slg
                 failed = reply.Result != WorldResult.Ok;
                 status = reply.Result switch
                 {
-                    WorldResult.Ok => order == null ? "Connected" : "March ordered",
-                    WorldResult.Full => "The world is full. Waiting for a seat…",
-                    WorldResult.InvalidTarget => "Choose a neutral tile next to your territory.",
-                    WorldResult.AlreadyMarching => "Wait for your current march to arrive.",
-                    WorldResult.Reserved => "Another player is marching to that tile.",
-                    _ => "March order rejected."
+                    WorldResult.Ok => order == null ? "已连接" : "已派出行军",
+                    WorldResult.Full => "世界已满，正在等待名额…",
+                    WorldResult.InvalidTarget => "请选择与己方领地相邻的中立地块。",
+                    WorldResult.AlreadyMarching => "请等待当前行军抵达。",
+                    WorldResult.Reserved => "已有玩家正在前往该地块。",
+                    _ => "行军指令被拒绝。"
                 };
             }
             if (order != null) pendingMarch = null;
@@ -225,7 +246,7 @@ namespace Slg
             world = null;
             if (!keepPendingMarch) pendingMarch = null;
             failed = false;
-            status = "Connection closed";
+            status = "连接已关闭";
         }
 
         private void OnGUI()
@@ -245,10 +266,10 @@ namespace Slg
             Fill(new Rect(width * 0.42f, 0, 1, height), new Color(0.41f, 0.39f, 0.25f));
             const float x = 58;
             float y = (height - 720) * 0.5f;
-            GUI.Label(new Rect(x, y + 54, 400, 24), "SLG  /  CONNECTION DEMO", eyebrow);
-            GUI.Label(new Rect(x - 3, y + 94, 450, 79), "Frontier", title);
+            GUI.Label(new Rect(x, y + 54, 400, 24), "策略游戏试玩", eyebrow);
+            GUI.Label(new Rect(x - 3, y + 94, 450, 79), "边境", title);
             GUI.Label(new Rect(x, y + 188, 408, 51),
-                registering ? "Create your Frontier account." : "Sign in to explore Frontier.", body);
+                registering ? GatewayConnection.RegistrationLengthMessage : "登录后探索边境世界。", body);
             Fill(new Rect(x, y + 248, 410, 1), new Color(0.23f, 0.30f, 0.30f));
 
             if (connection == null)
@@ -257,10 +278,10 @@ namespace Slg
             }
             else
             {
-                GUI.Label(new Rect(x, y + 283, 400, 32), "Session authenticated", body);
-                GUI.Label(new Rect(x, y + 343, 410, 26), $"ACCOUNT     {connection.Session.Account}", label);
-                GUI.Label(new Rect(x, y + 386, 410, 26), $"SESSION     {connection.Session.SessionId}", label);
-                if (DrawButton(new Rect(x, y + 518, 410, 48), "Disconnect"))
+                GUI.Label(new Rect(x, y + 283, 400, 32), "身份认证成功", body);
+                GUI.Label(new Rect(x, y + 343, 410, 26), $"账号     {connection.Session.Account}", sessionLabel);
+                GUI.Label(new Rect(x, y + 386, 410, 26), $"会话编号     {connection.Session.SessionId}", label);
+                if (DrawButton(new Rect(x, y + 518, 410, 48), "断开连接"))
                 {
                     Disconnect();
                 }
@@ -270,7 +291,7 @@ namespace Slg
             GUI.Label(new Rect(x, y + (registering ? 611 : 580), 410, 69), status, message);
             if (world == null)
             {
-                GUI.Label(new Rect(width * 0.42f + 36, height - 61, 400, 25), "WORLD MAP PREVIEW", eyebrow);
+                GUI.Label(new Rect(width * 0.42f + 36, height - 61, 400, 25), "世界地图预览", eyebrow);
             }
             else
             {
@@ -285,18 +306,18 @@ namespace Slg
             bool showingRegistration = registering;
             GUI.enabled = wasEnabled && !busy;
             float row = showingRegistration ? 68 : 78;
-            gateway = DrawField(x, y + 269, "Gateway", gateway);
-            account = DrawField(x, y + 269 + row, "Account", account);
-            password = DrawField(x, y + 269 + 2 * row, "Password", password, secret: true);
+            gateway = DrawField(x, y + 269, "网关地址", gateway);
+            account = DrawField(x, y + 269 + row, "账号", account);
+            password = DrawField(x, y + 269 + 2 * row, "密码", password, secret: true);
             if (showingRegistration)
             {
-                confirmedPassword = DrawField(x, y + 269 + 3 * row, "Confirm password", confirmedPassword, secret: true);
+                confirmedPassword = DrawField(x, y + 269 + 3 * row, "确认密码", confirmedPassword, secret: true);
             }
             GUI.enabled = wasEnabled && !busy && !string.IsNullOrWhiteSpace(gateway) &&
                 !string.IsNullOrWhiteSpace(account) && !string.IsNullOrEmpty(password) &&
                 (!showingRegistration || !string.IsNullOrEmpty(confirmedPassword));
             float buttonY = y + (showingRegistration ? 550 : 518);
-            string primaryLabel = showingRegistration ? (busy ? "Creating…" : "Create account") : (busy ? "Connecting…" : "Sign in");
+            string primaryLabel = showingRegistration ? (busy ? "正在注册…" : "注册账号") : (busy ? "正在连接…" : "登录");
             if (DrawButton(new Rect(x, buttonY, 242, 48), primaryLabel))
             {
                 if (showingRegistration) Register();
@@ -306,7 +327,7 @@ namespace Slg
             var secondaryArea = new Rect(x + 254, buttonY, 156, 48);
             Fill(secondaryArea, new Color(0.23f, 0.30f, 0.30f));
             Fill(new Rect(secondaryArea.x + 1, secondaryArea.y + 1, 154, 46), Background);
-            if (GUI.Button(secondaryArea, showingRegistration ? "Back to sign in" : "Create account", secondaryButton))
+            if (GUI.Button(secondaryArea, showingRegistration ? "返回登录" : "注册账号", secondaryButton))
             {
                 GUI.FocusControl(null);
                 ShowRegistration(!showingRegistration);
@@ -320,9 +341,9 @@ namespace Slg
             float center = (left + width) * 0.5f;
             float top = (height - 720) * 0.5f;
             Fill(new Rect(left + 1, 0, width - left - 1, height), Background);
-            GUI.Label(new Rect(left + 36, top + 54, 400, 24), "SHARED WORLD", eyebrow);
+            GUI.Label(new Rect(left + 36, top + 54, 400, 24), "共享世界", eyebrow);
             GUI.Label(new Rect(left + 36, top + 88, width - left - 72, 32),
-                $"Player {world.YourPlayer} · Select a neutral tile next to your territory", body);
+                $"玩家 {world.YourPlayer} · 请选择领地旁的中立地块", body);
 
             foreach (var tile in world.Tiles)
             {
@@ -341,8 +362,8 @@ namespace Slg
                 }
                 if (marching) color = new Color(0.42f, 0.32f, 0.17f);
                 Fill(rect, color);
-                string caption = tile.Home != 0 ? $"Home {tile.Home}" : marching ? "Marching" :
-                    tile.Owner == 0 ? $"Tile {tile.Id}" : $"Player {tile.Owner}";
+                string caption = tile.Home != 0 ? $"出生地 {tile.Home}" : marching ? "行军中" :
+                    tile.Owner == 0 ? $"地块 {tile.Id}" : $"玩家 {tile.Owner}";
                 if (GUI.Button(rect, caption, tileLabel) && tile.Owner == 0 && tile.Home == 0 &&
                     !marching && pendingMarch == null)
                 {
@@ -357,7 +378,7 @@ namespace Slg
             {
                 double seconds = Math.Max(0, (march.ArrivesAtMs - now) / 1000);
                 GUI.Label(new Rect(left + 36, line, width - left - 72, 28),
-                    $"Player {march.Player} · {march.SourceTileId} → {march.TargetTileId} · {seconds:0.0}s", body);
+                    $"玩家 {march.Player} · {march.SourceTileId} → {march.TargetTileId} · {seconds:0.0} 秒", body);
                 line += 30;
             }
         }
@@ -369,7 +390,7 @@ namespace Slg
             Fill(border, new Color(0.23f, 0.30f, 0.30f));
             Fill(new Rect(x + 1, y + 28, 408, 37), new Color(0.075f, 0.12f, 0.13f));
             var field = new Rect(x + 1, y + 28, 408, 37);
-            return secret ? GUI.PasswordField(field, value, '•', 128, input) : GUI.TextField(field, value, 256, input);
+            return secret ? GUI.PasswordField(field, value, '•', input) : GUI.TextField(field, value, input);
         }
 
         private bool DrawButton(Rect area, string caption)
@@ -385,6 +406,7 @@ namespace Slg
             body = Text(interfaceFont, 19, Muted);
             body.wordWrap = true;
             label = Text(interfaceFont, 15, Paper, FontStyle.Bold);
+            sessionLabel = new GUIStyle(label) { clipping = TextClipping.Clip };
             input = Text(interfaceFont, 16, Paper, alignment: TextAnchor.MiddleLeft);
             input.padding = new RectOffset(12, 12, 0, 0);
             button = Text(interfaceFont, 16, Background, FontStyle.Bold, TextAnchor.MiddleCenter);

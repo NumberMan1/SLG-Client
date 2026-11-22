@@ -1,7 +1,6 @@
 #if UNITY_WEBGL && !UNITY_EDITOR
 using System;
 using System.Buffers.Binary;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Google.Protobuf;
@@ -33,7 +32,7 @@ namespace Slg.Networking
             var login = await RequestTicketAsync(gateway, account, password);
             if (string.IsNullOrEmpty(login.Ticket))
             {
-                throw new InvalidDataException("Gateway returned an invalid login reply.");
+                throw new GatewayException("网关返回的登录响应无效。");
             }
             // 保持网关的主机和端口，按页面协议选择 WS 或 WSS。
             var endpoint = new UriBuilder(new Uri(gateway, "/v1/session"))
@@ -52,13 +51,13 @@ namespace Slg.Networking
                 }
                 if (SlgSocketState(id) != 1)
                 {
-                    throw new IOException("Could not open the gateway session.");
+                    throw new GatewayException("无法连接网关，请检查地址和网络。");
                 }
                 var payload = new ConnectRequest { Ticket = login.Ticket, ProtocolVersion = ProtocolVersion }.ToByteArray();
                 var frame = new byte[HeaderSize + payload.Length];
                 if (payload.Length > MaxPayload)
                 {
-                    throw new InvalidDataException("Connect request exceeds the frame limit.");
+                    throw new GatewayException("连接请求的数据过大。");
                 }
                 BinaryPrimitives.WriteUInt16BigEndian(frame.AsSpan(0, 2), (ushort)payload.Length);
                 BinaryPrimitives.WriteUInt16BigEndian(frame.AsSpan(2, 2), (ushort)SessionMessageId.ConnectRequest);
@@ -66,7 +65,7 @@ namespace Slg.Networking
                 Buffer.BlockCopy(payload, 0, frame, HeaderSize, payload.Length);
                 if (SlgSocketSend(id, frame, frame.Length) != 1)
                 {
-                    throw new IOException("Could not send the connect request.");
+                    throw new GatewayException("无法发送认证请求。");
                 }
                 // WebSocket 每条二进制消息应包含一整帧 Orbit 数据。
                 var buffer = new byte[HeaderSize + MaxPayload];
@@ -75,7 +74,7 @@ namespace Slg.Networking
                 {
                     if (SlgSocketState(id) != 1)
                     {
-                        throw new EndOfStreamException("Gateway closed the connection during authentication.");
+                        throw new GatewayException("认证过程中连接已断开。");
                     }
                     CheckDeadline(deadline);
                     await Task.Yield();
@@ -85,13 +84,10 @@ namespace Slg.Networking
                     BinaryPrimitives.ReadUInt32BigEndian(buffer.AsSpan(4, 4)) != ConnectSequence ||
                     BinaryPrimitives.ReadUInt16BigEndian(buffer.AsSpan(8, 2)) != 0)
                 {
-                    throw new InvalidDataException("Gateway returned an invalid connect frame.");
+                    throw new GatewayException("网关返回的认证响应无效。");
                 }
                 var reply = ConnectReply.Parser.ParseFrom(buffer, HeaderSize, size - HeaderSize);
-                if (reply.Account != account || reply.SessionId == 0)
-                {
-                    throw new InvalidDataException("Gateway returned an invalid session.");
-                }
+                ValidateSession(reply, account);
                 return new GatewayConnection(id, reply);
             }
             catch
@@ -105,7 +101,7 @@ namespace Slg.Networking
         {
             if (Time.realtimeSinceStartupAsDouble >= deadline)
             {
-                throw new TimeoutException("Gateway authentication timed out.");
+                throw new GatewayException("连接认证超时，请重试。");
             }
         }
 
@@ -114,7 +110,7 @@ namespace Slg.Networking
             int id = socketId;
             if (SlgSocketSend(id, frame, frame.Length) != 1)
             {
-                throw new IOException("Could not send a world request.");
+                throw new GatewayException("无法发送世界请求。");
             }
             var buffer = new byte[HeaderSize + MaxPayload];
             double deadline = Time.realtimeSinceStartupAsDouble + 5;
@@ -124,17 +120,17 @@ namespace Slg.Networking
             {
                 if (SlgSocketState(id) != 1)
                 {
-                    throw new EndOfStreamException("Gateway closed the WebSocket during a world request.");
+                    throw new GatewayException("等待世界响应时连接已断开。");
                 }
                 if (Time.realtimeSinceStartupAsDouble >= deadline)
                 {
-                    throw new TimeoutException("World request timed out.");
+                    throw new GatewayException("世界请求超时，请重新登录。");
                 }
                 await Task.Yield();
             }
             if (size < HeaderSize || size != HeaderSize + ValidateWorldHeader(buffer, sequence))
             {
-                throw new InvalidDataException("Gateway returned an incomplete world reply.");
+                throw new GatewayException("网关返回的世界数据不完整。");
             }
             return WorldReply.Parser.ParseFrom(buffer, HeaderSize, size - HeaderSize);
         }

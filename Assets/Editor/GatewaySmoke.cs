@@ -10,7 +10,7 @@ namespace Slg.EditorTools
     public static class GatewaySmoke
     {
         /// <summary>从编辑器菜单运行检查，将结果写入控制台。</summary>
-        [MenuItem("SLG/Verify Gateway Connection")]
+        [MenuItem("SLG/验证网关连接")]
         public static void RunFromMenu() => Run(exitWhenDone: false);
 
         /// <summary>从批处理入口运行检查，以退出码返回结果。</summary>
@@ -54,11 +54,11 @@ namespace Slg.EditorTools
         {
             if (error == null)
             {
-                Debug.Log("SLG gateway smoke passed (game-server: ok)");
+                Debug.Log("网关连接验证通过，游戏服运行正常。");
             }
             else
             {
-                Debug.LogError($"SLG gateway smoke failed: {error.Message}");
+                Debug.LogError($"网关连接验证失败。{error.Message}");
             }
 
             if (exitWhenDone)
