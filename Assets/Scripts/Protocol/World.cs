@@ -24,31 +24,45 @@ namespace Slg.Protocol {
     static WorldReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChFwcm90by93b3JsZC5wcm90bxIMc2xnLndvcmxkLnYxIkgKCk1hcmNoT3Jk",
-            "ZXISEgoKY29tbWFuZF9pZBgBIAEoCRIWCg50YXJnZXRfdGlsZV9pZBgCIAEo",
-            "DRIOCgZ0cm9vcHMYAyABKA0imQEKDFdvcmxkUmVxdWVzdBIWCg5rbm93bl9p",
-            "bnN0YW5jZRgBIAEoCRIWCg5rbm93bl9yZXZpc2lvbhgCIAEoBBInCgVvcmRl",
-            "chgDIAEoCzIYLnNsZy53b3JsZC52MS5NYXJjaE9yZGVyEhwKD2tub3duX2Jh",
-            "dHRsZV9pZBgEIAEoBEgAiAEBQhIKEF9rbm93bl9iYXR0bGVfaWQiTAoMV29y",
-            "bGRDb21tYW5kEg8KB2FjY291bnQYASABKAkSKwoHcmVxdWVzdBgCIAEoCzIa",
-            "LnNsZy53b3JsZC52MS5Xb3JsZFJlcXVlc3QiXAoJV29ybGRUaWxlEgoKAmlk",
-            "GAEgASgNEgkKAXEYAiABKBESCQoBchgDIAEoERINCgVvd25lchgEIAEoDRIM",
-            "CgRob21lGAUgASgNEhAKCGdhcnJpc29uGAYgASgNIoQBCgpXb3JsZE1hcmNo",
-            "Eg4KBnBsYXllchgBIAEoDRIWCg5zb3VyY2VfdGlsZV9pZBgCIAEoDRIWCg50",
-            "YXJnZXRfdGlsZV9pZBgDIAEoDRIVCg1hcnJpdmVzX2F0X21zGAQgASgDEg4K",
-            "BnRyb29wcxgFIAEoDRIPCgdob3N0aWxlGAYgASgIIoICChFXb3JsZEJhdHRs",
-            "ZVJlcG9ydBIRCgliYXR0bGVfaWQYASABKAQSFgoOdGFyZ2V0X3RpbGVfaWQY",
-            "AiABKA0SEAoIYXR0YWNrZXIYAyABKA0SEAoIZGVmZW5kZXIYBCABKA0SFwoP",
-            "YXR0YWNrZXJfdHJvb3BzGAUgASgNEhcKD2RlZmVuZGVyX3Ryb29wcxgGIAEo",
-            "DRIaChJhdHRhY2tlcl9zdXJ2aXZvcnMYByABKA0SGgoSZGVmZW5kZXJfc3Vy",
-            "dml2b3JzGAggASgNEhAKCGNhcHR1cmVkGAkgASgIEhQKDHJ1bGVfdmVyc2lv",
-            "bhgKIAEoDRIMCgRzZWVkGAsgASgEIoMCCg1Xb3JsZFNuYXBzaG90EhAKCGlu",
-            "c3RhbmNlGAEgASgJEhAKCHJldmlzaW9uGAIgASgEEhMKC3lvdXJfcGxheWVy",
-            "GAMgASgNEiYKBXRpbGVzGAQgAygLMhcuc2xnLndvcmxkLnYxLldvcmxkVGls",
-            "ZRIpCgdtYXJjaGVzGAUgAygLMhguc2xnLndvcmxkLnYxLldvcmxkTWFyY2gS",
-            "GAoQYXZhaWxhYmxlX3Ryb29wcxgGIAEoDRIWCg50cm9vcF9jYXBhY2l0eRgH",
-            "IAEoDRI0CgtsYXN0X2JhdHRsZRgIIAEoCzIfLnNsZy53b3JsZC52MS5Xb3Js",
-            "ZEJhdHRsZVJlcG9ydCLrAQoKV29ybGRSZXBseRIpCgZyZXN1bHQYASABKA4y",
+            "ChFwcm90by93b3JsZC5wcm90bxIMc2xnLndvcmxkLnYxIrEBCgpNYXJjaE9y",
+            "ZGVyEhIKCmNvbW1hbmRfaWQYASABKAkSFgoOdGFyZ2V0X3RpbGVfaWQYAiAB",
+            "KA0SDgoGdHJvb3BzGAMgASgNEhQKDHJvdW5kX2JhdHRsZRgEIAEoCBIbChNy",
+            "ZWluZm9yY2VfYmF0dGxlX2lkGAUgASgEEhkKEWNvbnRpbnVvdXNfYmF0dGxl",
+            "GAYgASgIEhkKEXJldHJlYXRfYmF0dGxlX2lkGAcgASgEIssBCgxXb3JsZFJl",
+            "cXVlc3QSFgoOa25vd25faW5zdGFuY2UYASABKAkSFgoOa25vd25fcmV2aXNp",
+            "b24YAiABKAQSJwoFb3JkZXIYAyABKAsyGC5zbGcud29ybGQudjEuTWFyY2hP",
+            "cmRlchIcCg9rbm93bl9iYXR0bGVfaWQYBCABKARIAIgBARIcCg9rbm93bl9y",
+            "ZXBvcnRfaWQYBSABKARIAYgBAUISChBfa25vd25fYmF0dGxlX2lkQhIKEF9r",
+            "bm93bl9yZXBvcnRfaWQiTAoMV29ybGRDb21tYW5kEg8KB2FjY291bnQYASAB",
+            "KAkSKwoHcmVxdWVzdBgCIAEoCzIaLnNsZy53b3JsZC52MS5Xb3JsZFJlcXVl",
+            "c3QiXAoJV29ybGRUaWxlEgoKAmlkGAEgASgNEgkKAXEYAiABKBESCQoBchgD",
+            "IAEoERINCgVvd25lchgEIAEoDRIMCgRob21lGAUgASgNEhAKCGdhcnJpc29u",
+            "GAYgASgNIqEBCgpXb3JsZE1hcmNoEg4KBnBsYXllchgBIAEoDRIWCg5zb3Vy",
+            "Y2VfdGlsZV9pZBgCIAEoDRIWCg50YXJnZXRfdGlsZV9pZBgDIAEoDRIVCg1h",
+            "cnJpdmVzX2F0X21zGAQgASgDEg4KBnRyb29wcxgFIAEoDRIPCgdob3N0aWxl",
+            "GAYgASgIEhsKE3JlaW5mb3JjZV9iYXR0bGVfaWQYByABKAQijwIKC1dvcmxk",
+            "QmF0dGxlEhEKCWJhdHRsZV9pZBgBIAEoBBIWCg50YXJnZXRfdGlsZV9pZBgC",
+            "IAEoDRIQCghhdHRhY2tlchgDIAEoDRIQCghkZWZlbmRlchgEIAEoDRINCgVy",
+            "b3VuZBgFIAEoDRIOCgZyb3VuZHMYBiABKA0SGAoQcm91bmRfZW5kc19hdF9t",
+            "cxgHIAEoAxIXCg9hdHRhY2tlcl90cm9vcHMYCCABKA0SFwoPZGVmZW5kZXJf",
+            "dHJvb3BzGAkgASgNEhgKEGF0dGFja2VyX3dhaXRpbmcYCiABKA0SGAoQZGVm",
+            "ZW5kZXJfd2FpdGluZxgLIAEoDRISCgpjb250aW51b3VzGAwgASgIIoEDChFX",
+            "b3JsZEJhdHRsZVJlcG9ydBIRCgliYXR0bGVfaWQYASABKAQSFgoOdGFyZ2V0",
+            "X3RpbGVfaWQYAiABKA0SEAoIYXR0YWNrZXIYAyABKA0SEAoIZGVmZW5kZXIY",
+            "BCABKA0SFwoPYXR0YWNrZXJfdHJvb3BzGAUgASgNEhcKD2RlZmVuZGVyX3Ry",
+            "b29wcxgGIAEoDRIaChJhdHRhY2tlcl9zdXJ2aXZvcnMYByABKA0SGgoSZGVm",
+            "ZW5kZXJfc3Vydml2b3JzGAggASgNEhAKCGNhcHR1cmVkGAkgASgIEhQKDHJ1",
+            "bGVfdmVyc2lvbhgKIAEoDRIMCgRzZWVkGAsgASgEEg4KBnJvdW5kcxgMIAEo",
+            "DRIfChdhdHRhY2tlcl9yZWluZm9yY2VtZW50cxgNIAEoDRIfChdkZWZlbmRl",
+            "cl9yZWluZm9yY2VtZW50cxgOIAEoDRIYChByZXRyZWF0ZWRfcGxheWVyGA8g",
+            "ASgNEhEKCXJlcG9ydF9pZBgQIAEoBCKvAgoNV29ybGRTbmFwc2hvdBIQCghp",
+            "bnN0YW5jZRgBIAEoCRIQCghyZXZpc2lvbhgCIAEoBBITCgt5b3VyX3BsYXll",
+            "chgDIAEoDRImCgV0aWxlcxgEIAMoCzIXLnNsZy53b3JsZC52MS5Xb3JsZFRp",
+            "bGUSKQoHbWFyY2hlcxgFIAMoCzIYLnNsZy53b3JsZC52MS5Xb3JsZE1hcmNo",
+            "EhgKEGF2YWlsYWJsZV90cm9vcHMYBiABKA0SFgoOdHJvb3BfY2FwYWNpdHkY",
+            "ByABKA0SNAoLbGFzdF9iYXR0bGUYCCABKAsyHy5zbGcud29ybGQudjEuV29y",
+            "bGRCYXR0bGVSZXBvcnQSKgoHYmF0dGxlcxgJIAMoCzIZLnNsZy53b3JsZC52",
+            "MS5Xb3JsZEJhdHRsZSLrAQoKV29ybGRSZXBseRIpCgZyZXN1bHQYASABKA4y",
             "GS5zbGcud29ybGQudjEuV29ybGRSZXN1bHQSFgoOc2VydmVyX3RpbWVfbXMY",
             "AiABKAMSLQoIc25hcHNob3QYAyABKAsyGy5zbGcud29ybGQudjEuV29ybGRT",
             "bmFwc2hvdBIdChBhdmFpbGFibGVfdHJvb3BzGAQgASgNSACIAQESNwoOYmF0",
@@ -56,25 +70,28 @@ namespace Slg.Protocol {
             "ZXBvcnRCEwoRX2F2YWlsYWJsZV90cm9vcHMqbAoOV29ybGRNZXNzYWdlSWQS",
             "IAocV09STERfTUVTU0FHRV9JRF9VTlNQRUNJRklFRBAAEhwKGFdPUkxEX01F",
             "U1NBR0VfSURfUkVRVUVTVBADEhoKFldPUkxEX01FU1NBR0VfSURfUkVQTFkQ",
-            "BCqcAgoLV29ybGRSZXN1bHQSEwoPV09STERfUkVTVUxUX09LEAASFQoRV09S",
+            "BCqFAwoLV29ybGRSZXN1bHQSEwoPV09STERfUkVTVUxUX09LEAASFQoRV09S",
             "TERfUkVTVUxUX0ZVTEwQARIfChtXT1JMRF9SRVNVTFRfSU5WQUxJRF9UQVJH",
             "RVQQAhIhCh1XT1JMRF9SRVNVTFRfQUxSRUFEWV9NQVJDSElORxADEhkKFVdP",
             "UkxEX1JFU1VMVF9SRVNFUlZFRBAEEh4KGldPUkxEX1JFU1VMVF9JTlZBTElE",
             "X09SREVSEAUSHgoaV09STERfUkVTVUxUX1dPUkxEX0NIQU5HRUQQBhIcChhX",
             "T1JMRF9SRVNVTFRfVU5BVkFJTEFCTEUQBxIkCiBXT1JMRF9SRVNVTFRfSU5T",
-            "VUZGSUNJRU5UX1RST09QUxAIQkFaMGdpdGh1Yi5jb20vTnVtYmVyTWFuMS9z",
-            "bGctc2VydmVyL3Byb3RvO3Nlc3Npb25wYqoCDFNsZy5Qcm90b2NvbGIGcHJv",
-            "dG8z"));
+            "VUZGSUNJRU5UX1RST09QUxAIEiUKIVdPUkxEX1JFU1VMVF9SRUlORk9SQ0VN",
+            "RU5UX0NMT1NFRBAJEiAKHFdPUkxEX1JFU1VMVF9CQVRUTEVfQ0FQQUNJVFkQ",
+            "ChIeChpXT1JMRF9SRVNVTFRfQkFUVExFX0NMT1NFRBALQkFaMGdpdGh1Yi5j",
+            "b20vTnVtYmVyTWFuMS9zbGctc2VydmVyL3Byb3RvO3Nlc3Npb25wYqoCDFNs",
+            "Zy5Qcm90b2NvbGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Slg.Protocol.WorldMessageId), typeof(global::Slg.Protocol.WorldResult), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.MarchOrder), global::Slg.Protocol.MarchOrder.Parser, new[]{ "CommandId", "TargetTileId", "Troops" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldRequest), global::Slg.Protocol.WorldRequest.Parser, new[]{ "KnownInstance", "KnownRevision", "Order", "KnownBattleId" }, new[]{ "KnownBattleId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.MarchOrder), global::Slg.Protocol.MarchOrder.Parser, new[]{ "CommandId", "TargetTileId", "Troops", "RoundBattle", "ReinforceBattleId", "ContinuousBattle", "RetreatBattleId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldRequest), global::Slg.Protocol.WorldRequest.Parser, new[]{ "KnownInstance", "KnownRevision", "Order", "KnownBattleId", "KnownReportId" }, new[]{ "KnownBattleId", "KnownReportId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldCommand), global::Slg.Protocol.WorldCommand.Parser, new[]{ "Account", "Request" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldTile), global::Slg.Protocol.WorldTile.Parser, new[]{ "Id", "Q", "R", "Owner", "Home", "Garrison" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldMarch), global::Slg.Protocol.WorldMarch.Parser, new[]{ "Player", "SourceTileId", "TargetTileId", "ArrivesAtMs", "Troops", "Hostile" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldBattleReport), global::Slg.Protocol.WorldBattleReport.Parser, new[]{ "BattleId", "TargetTileId", "Attacker", "Defender", "AttackerTroops", "DefenderTroops", "AttackerSurvivors", "DefenderSurvivors", "Captured", "RuleVersion", "Seed" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldSnapshot), global::Slg.Protocol.WorldSnapshot.Parser, new[]{ "Instance", "Revision", "YourPlayer", "Tiles", "Marches", "AvailableTroops", "TroopCapacity", "LastBattle" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldMarch), global::Slg.Protocol.WorldMarch.Parser, new[]{ "Player", "SourceTileId", "TargetTileId", "ArrivesAtMs", "Troops", "Hostile", "ReinforceBattleId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldBattle), global::Slg.Protocol.WorldBattle.Parser, new[]{ "BattleId", "TargetTileId", "Attacker", "Defender", "Round", "Rounds", "RoundEndsAtMs", "AttackerTroops", "DefenderTroops", "AttackerWaiting", "DefenderWaiting", "Continuous" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldBattleReport), global::Slg.Protocol.WorldBattleReport.Parser, new[]{ "BattleId", "TargetTileId", "Attacker", "Defender", "AttackerTroops", "DefenderTroops", "AttackerSurvivors", "DefenderSurvivors", "Captured", "RuleVersion", "Seed", "Rounds", "AttackerReinforcements", "DefenderReinforcements", "RetreatedPlayer", "ReportId" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldSnapshot), global::Slg.Protocol.WorldSnapshot.Parser, new[]{ "Instance", "Revision", "YourPlayer", "Tiles", "Marches", "AvailableTroops", "TroopCapacity", "LastBattle", "Battles" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldReply), global::Slg.Protocol.WorldReply.Parser, new[]{ "Result", "ServerTimeMs", "Snapshot", "AvailableTroops", "BattleReports" }, new[]{ "AvailableTroops" }, null, null, null)
           }));
     }
@@ -98,6 +115,9 @@ namespace Slg.Protocol {
     [pbr::OriginalName("WORLD_RESULT_WORLD_CHANGED")] WorldChanged = 6,
     [pbr::OriginalName("WORLD_RESULT_UNAVAILABLE")] Unavailable = 7,
     [pbr::OriginalName("WORLD_RESULT_INSUFFICIENT_TROOPS")] InsufficientTroops = 8,
+    [pbr::OriginalName("WORLD_RESULT_REINFORCEMENT_CLOSED")] ReinforcementClosed = 9,
+    [pbr::OriginalName("WORLD_RESULT_BATTLE_CAPACITY")] BattleCapacity = 10,
+    [pbr::OriginalName("WORLD_RESULT_BATTLE_CLOSED")] BattleClosed = 11,
   }
 
   #endregion
@@ -144,6 +164,10 @@ namespace Slg.Protocol {
       commandId_ = other.commandId_;
       targetTileId_ = other.targetTileId_;
       troops_ = other.troops_;
+      roundBattle_ = other.roundBattle_;
+      reinforceBattleId_ = other.reinforceBattleId_;
+      continuousBattle_ = other.continuousBattle_;
+      retreatBattleId_ = other.retreatBattleId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -192,6 +216,63 @@ namespace Slg.Protocol {
       }
     }
 
+    /// <summary>Field number for the "round_battle" field.</summary>
+    public const int RoundBattleFieldNumber = 4;
+    private bool roundBattle_;
+    /// <summary>
+    /// 提供回合和增援界面的客户端启用三回合规则。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool RoundBattle {
+      get { return roundBattle_; }
+      set {
+        roundBattle_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "reinforce_battle_id" field.</summary>
+    public const int ReinforceBattleIdFieldNumber = 5;
+    private ulong reinforceBattleId_;
+    /// <summary>
+    /// 援军仅加入指定战斗，避免地块易主后误变成进攻。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong ReinforceBattleId {
+      get { return reinforceBattleId_; }
+      set {
+        reinforceBattleId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "continuous_battle" field.</summary>
+    public const int ContinuousBattleFieldNumber = 6;
+    private bool continuousBattle_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool ContinuousBattle {
+      get { return continuousBattle_; }
+      set {
+        continuousBattle_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "retreat_battle_id" field.</summary>
+    public const int RetreatBattleIdFieldNumber = 7;
+    private ulong retreatBattleId_;
+    /// <summary>
+    /// 撤出指定战斗时省略出征兵力，指令仍使用相同的去重规则。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong RetreatBattleId {
+      get { return retreatBattleId_; }
+      set {
+        retreatBattleId_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -210,6 +291,10 @@ namespace Slg.Protocol {
       if (CommandId != other.CommandId) return false;
       if (TargetTileId != other.TargetTileId) return false;
       if (Troops != other.Troops) return false;
+      if (RoundBattle != other.RoundBattle) return false;
+      if (ReinforceBattleId != other.ReinforceBattleId) return false;
+      if (ContinuousBattle != other.ContinuousBattle) return false;
+      if (RetreatBattleId != other.RetreatBattleId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -220,6 +305,10 @@ namespace Slg.Protocol {
       if (CommandId.Length != 0) hash ^= CommandId.GetHashCode();
       if (TargetTileId != 0) hash ^= TargetTileId.GetHashCode();
       if (Troops != 0) hash ^= Troops.GetHashCode();
+      if (RoundBattle != false) hash ^= RoundBattle.GetHashCode();
+      if (ReinforceBattleId != 0UL) hash ^= ReinforceBattleId.GetHashCode();
+      if (ContinuousBattle != false) hash ^= ContinuousBattle.GetHashCode();
+      if (RetreatBattleId != 0UL) hash ^= RetreatBattleId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -250,6 +339,22 @@ namespace Slg.Protocol {
         output.WriteRawTag(24);
         output.WriteUInt32(Troops);
       }
+      if (RoundBattle != false) {
+        output.WriteRawTag(32);
+        output.WriteBool(RoundBattle);
+      }
+      if (ReinforceBattleId != 0UL) {
+        output.WriteRawTag(40);
+        output.WriteUInt64(ReinforceBattleId);
+      }
+      if (ContinuousBattle != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(ContinuousBattle);
+      }
+      if (RetreatBattleId != 0UL) {
+        output.WriteRawTag(56);
+        output.WriteUInt64(RetreatBattleId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -272,6 +377,22 @@ namespace Slg.Protocol {
         output.WriteRawTag(24);
         output.WriteUInt32(Troops);
       }
+      if (RoundBattle != false) {
+        output.WriteRawTag(32);
+        output.WriteBool(RoundBattle);
+      }
+      if (ReinforceBattleId != 0UL) {
+        output.WriteRawTag(40);
+        output.WriteUInt64(ReinforceBattleId);
+      }
+      if (ContinuousBattle != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(ContinuousBattle);
+      }
+      if (RetreatBattleId != 0UL) {
+        output.WriteRawTag(56);
+        output.WriteUInt64(RetreatBattleId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -290,6 +411,18 @@ namespace Slg.Protocol {
       }
       if (Troops != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Troops);
+      }
+      if (RoundBattle != false) {
+        size += 1 + 1;
+      }
+      if (ReinforceBattleId != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(ReinforceBattleId);
+      }
+      if (ContinuousBattle != false) {
+        size += 1 + 1;
+      }
+      if (RetreatBattleId != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(RetreatBattleId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -311,6 +444,18 @@ namespace Slg.Protocol {
       }
       if (other.Troops != 0) {
         Troops = other.Troops;
+      }
+      if (other.RoundBattle != false) {
+        RoundBattle = other.RoundBattle;
+      }
+      if (other.ReinforceBattleId != 0UL) {
+        ReinforceBattleId = other.ReinforceBattleId;
+      }
+      if (other.ContinuousBattle != false) {
+        ContinuousBattle = other.ContinuousBattle;
+      }
+      if (other.RetreatBattleId != 0UL) {
+        RetreatBattleId = other.RetreatBattleId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -343,6 +488,22 @@ namespace Slg.Protocol {
             Troops = input.ReadUInt32();
             break;
           }
+          case 32: {
+            RoundBattle = input.ReadBool();
+            break;
+          }
+          case 40: {
+            ReinforceBattleId = input.ReadUInt64();
+            break;
+          }
+          case 48: {
+            ContinuousBattle = input.ReadBool();
+            break;
+          }
+          case 56: {
+            RetreatBattleId = input.ReadUInt64();
+            break;
+          }
         }
       }
     #endif
@@ -372,6 +533,22 @@ namespace Slg.Protocol {
           }
           case 24: {
             Troops = input.ReadUInt32();
+            break;
+          }
+          case 32: {
+            RoundBattle = input.ReadBool();
+            break;
+          }
+          case 40: {
+            ReinforceBattleId = input.ReadUInt64();
+            break;
+          }
+          case 48: {
+            ContinuousBattle = input.ReadBool();
+            break;
+          }
+          case 56: {
+            RetreatBattleId = input.ReadUInt64();
             break;
           }
         }
@@ -425,6 +602,7 @@ namespace Slg.Protocol {
       knownRevision_ = other.knownRevision_;
       order_ = other.order_ != null ? other.order_.Clone() : null;
       knownBattleId_ = other.knownBattleId_;
+      knownReportId_ = other.knownReportId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -500,6 +678,36 @@ namespace Slg.Protocol {
       _hasBits0 &= ~1;
     }
 
+    /// <summary>Field number for the "known_report_id" field.</summary>
+    public const int KnownReportIdFieldNumber = 5;
+    private readonly static ulong KnownReportIdDefaultValue = 0UL;
+
+    private ulong knownReportId_;
+    /// <summary>
+    /// 按战果提交顺序读取战报，包括晚开战却先结算的交锋。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong KnownReportId {
+      get { if ((_hasBits0 & 2) != 0) { return knownReportId_; } else { return KnownReportIdDefaultValue; } }
+      set {
+        _hasBits0 |= 2;
+        knownReportId_ = value;
+      }
+    }
+    /// <summary>Gets whether the "known_report_id" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasKnownReportId {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "known_report_id" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearKnownReportId() {
+      _hasBits0 &= ~2;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -519,6 +727,7 @@ namespace Slg.Protocol {
       if (KnownRevision != other.KnownRevision) return false;
       if (!object.Equals(Order, other.Order)) return false;
       if (KnownBattleId != other.KnownBattleId) return false;
+      if (KnownReportId != other.KnownReportId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -530,6 +739,7 @@ namespace Slg.Protocol {
       if (KnownRevision != 0UL) hash ^= KnownRevision.GetHashCode();
       if (order_ != null) hash ^= Order.GetHashCode();
       if (HasKnownBattleId) hash ^= KnownBattleId.GetHashCode();
+      if (HasKnownReportId) hash ^= KnownReportId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -564,6 +774,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(32);
         output.WriteUInt64(KnownBattleId);
       }
+      if (HasKnownReportId) {
+        output.WriteRawTag(40);
+        output.WriteUInt64(KnownReportId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -590,6 +804,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(32);
         output.WriteUInt64(KnownBattleId);
       }
+      if (HasKnownReportId) {
+        output.WriteRawTag(40);
+        output.WriteUInt64(KnownReportId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -611,6 +829,9 @@ namespace Slg.Protocol {
       }
       if (HasKnownBattleId) {
         size += 1 + pb::CodedOutputStream.ComputeUInt64Size(KnownBattleId);
+      }
+      if (HasKnownReportId) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(KnownReportId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -638,6 +859,9 @@ namespace Slg.Protocol {
       }
       if (other.HasKnownBattleId) {
         KnownBattleId = other.KnownBattleId;
+      }
+      if (other.HasKnownReportId) {
+        KnownReportId = other.KnownReportId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -677,6 +901,10 @@ namespace Slg.Protocol {
             KnownBattleId = input.ReadUInt64();
             break;
           }
+          case 40: {
+            KnownReportId = input.ReadUInt64();
+            break;
+          }
         }
       }
     #endif
@@ -713,6 +941,10 @@ namespace Slg.Protocol {
           }
           case 32: {
             KnownBattleId = input.ReadUInt64();
+            break;
+          }
+          case 40: {
+            KnownReportId = input.ReadUInt64();
             break;
           }
         }
@@ -1393,6 +1625,7 @@ namespace Slg.Protocol {
       arrivesAtMs_ = other.arrivesAtMs_;
       troops_ = other.troops_;
       hostile_ = other.hostile_;
+      reinforceBattleId_ = other.reinforceBattleId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1474,6 +1707,18 @@ namespace Slg.Protocol {
       }
     }
 
+    /// <summary>Field number for the "reinforce_battle_id" field.</summary>
+    public const int ReinforceBattleIdFieldNumber = 7;
+    private ulong reinforceBattleId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong ReinforceBattleId {
+      get { return reinforceBattleId_; }
+      set {
+        reinforceBattleId_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1495,6 +1740,7 @@ namespace Slg.Protocol {
       if (ArrivesAtMs != other.ArrivesAtMs) return false;
       if (Troops != other.Troops) return false;
       if (Hostile != other.Hostile) return false;
+      if (ReinforceBattleId != other.ReinforceBattleId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1508,6 +1754,7 @@ namespace Slg.Protocol {
       if (ArrivesAtMs != 0L) hash ^= ArrivesAtMs.GetHashCode();
       if (Troops != 0) hash ^= Troops.GetHashCode();
       if (Hostile != false) hash ^= Hostile.GetHashCode();
+      if (ReinforceBattleId != 0UL) hash ^= ReinforceBattleId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1550,6 +1797,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(48);
         output.WriteBool(Hostile);
       }
+      if (ReinforceBattleId != 0UL) {
+        output.WriteRawTag(56);
+        output.WriteUInt64(ReinforceBattleId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1584,6 +1835,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(48);
         output.WriteBool(Hostile);
       }
+      if (ReinforceBattleId != 0UL) {
+        output.WriteRawTag(56);
+        output.WriteUInt64(ReinforceBattleId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1611,6 +1866,9 @@ namespace Slg.Protocol {
       }
       if (Hostile != false) {
         size += 1 + 1;
+      }
+      if (ReinforceBattleId != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(ReinforceBattleId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1641,6 +1899,9 @@ namespace Slg.Protocol {
       }
       if (other.Hostile != false) {
         Hostile = other.Hostile;
+      }
+      if (other.ReinforceBattleId != 0UL) {
+        ReinforceBattleId = other.ReinforceBattleId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1683,6 +1944,10 @@ namespace Slg.Protocol {
           }
           case 48: {
             Hostile = input.ReadBool();
+            break;
+          }
+          case 56: {
+            ReinforceBattleId = input.ReadUInt64();
             break;
           }
         }
@@ -1728,6 +1993,615 @@ namespace Slg.Protocol {
             Hostile = input.ReadBool();
             break;
           }
+          case 56: {
+            ReinforceBattleId = input.ReadUInt64();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class WorldBattle : pb::IMessage<WorldBattle>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<WorldBattle> _parser = new pb::MessageParser<WorldBattle>(() => new WorldBattle());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<WorldBattle> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[5]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public WorldBattle() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public WorldBattle(WorldBattle other) : this() {
+      battleId_ = other.battleId_;
+      targetTileId_ = other.targetTileId_;
+      attacker_ = other.attacker_;
+      defender_ = other.defender_;
+      round_ = other.round_;
+      rounds_ = other.rounds_;
+      roundEndsAtMs_ = other.roundEndsAtMs_;
+      attackerTroops_ = other.attackerTroops_;
+      defenderTroops_ = other.defenderTroops_;
+      attackerWaiting_ = other.attackerWaiting_;
+      defenderWaiting_ = other.defenderWaiting_;
+      continuous_ = other.continuous_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public WorldBattle Clone() {
+      return new WorldBattle(this);
+    }
+
+    /// <summary>Field number for the "battle_id" field.</summary>
+    public const int BattleIdFieldNumber = 1;
+    private ulong battleId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong BattleId {
+      get { return battleId_; }
+      set {
+        battleId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "target_tile_id" field.</summary>
+    public const int TargetTileIdFieldNumber = 2;
+    private uint targetTileId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint TargetTileId {
+      get { return targetTileId_; }
+      set {
+        targetTileId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "attacker" field.</summary>
+    public const int AttackerFieldNumber = 3;
+    private uint attacker_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Attacker {
+      get { return attacker_; }
+      set {
+        attacker_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "defender" field.</summary>
+    public const int DefenderFieldNumber = 4;
+    private uint defender_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Defender {
+      get { return defender_; }
+      set {
+        defender_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "round" field.</summary>
+    public const int RoundFieldNumber = 5;
+    private uint round_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Round {
+      get { return round_; }
+      set {
+        round_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "rounds" field.</summary>
+    public const int RoundsFieldNumber = 6;
+    private uint rounds_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Rounds {
+      get { return rounds_; }
+      set {
+        rounds_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "round_ends_at_ms" field.</summary>
+    public const int RoundEndsAtMsFieldNumber = 7;
+    private long roundEndsAtMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public long RoundEndsAtMs {
+      get { return roundEndsAtMs_; }
+      set {
+        roundEndsAtMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "attacker_troops" field.</summary>
+    public const int AttackerTroopsFieldNumber = 8;
+    private uint attackerTroops_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint AttackerTroops {
+      get { return attackerTroops_; }
+      set {
+        attackerTroops_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "defender_troops" field.</summary>
+    public const int DefenderTroopsFieldNumber = 9;
+    private uint defenderTroops_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint DefenderTroops {
+      get { return defenderTroops_; }
+      set {
+        defenderTroops_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "attacker_waiting" field.</summary>
+    public const int AttackerWaitingFieldNumber = 10;
+    private uint attackerWaiting_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint AttackerWaiting {
+      get { return attackerWaiting_; }
+      set {
+        attackerWaiting_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "defender_waiting" field.</summary>
+    public const int DefenderWaitingFieldNumber = 11;
+    private uint defenderWaiting_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint DefenderWaiting {
+      get { return defenderWaiting_; }
+      set {
+        defenderWaiting_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "continuous" field.</summary>
+    public const int ContinuousFieldNumber = 12;
+    private bool continuous_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Continuous {
+      get { return continuous_; }
+      set {
+        continuous_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as WorldBattle);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(WorldBattle other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (BattleId != other.BattleId) return false;
+      if (TargetTileId != other.TargetTileId) return false;
+      if (Attacker != other.Attacker) return false;
+      if (Defender != other.Defender) return false;
+      if (Round != other.Round) return false;
+      if (Rounds != other.Rounds) return false;
+      if (RoundEndsAtMs != other.RoundEndsAtMs) return false;
+      if (AttackerTroops != other.AttackerTroops) return false;
+      if (DefenderTroops != other.DefenderTroops) return false;
+      if (AttackerWaiting != other.AttackerWaiting) return false;
+      if (DefenderWaiting != other.DefenderWaiting) return false;
+      if (Continuous != other.Continuous) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (BattleId != 0UL) hash ^= BattleId.GetHashCode();
+      if (TargetTileId != 0) hash ^= TargetTileId.GetHashCode();
+      if (Attacker != 0) hash ^= Attacker.GetHashCode();
+      if (Defender != 0) hash ^= Defender.GetHashCode();
+      if (Round != 0) hash ^= Round.GetHashCode();
+      if (Rounds != 0) hash ^= Rounds.GetHashCode();
+      if (RoundEndsAtMs != 0L) hash ^= RoundEndsAtMs.GetHashCode();
+      if (AttackerTroops != 0) hash ^= AttackerTroops.GetHashCode();
+      if (DefenderTroops != 0) hash ^= DefenderTroops.GetHashCode();
+      if (AttackerWaiting != 0) hash ^= AttackerWaiting.GetHashCode();
+      if (DefenderWaiting != 0) hash ^= DefenderWaiting.GetHashCode();
+      if (Continuous != false) hash ^= Continuous.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (BattleId != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(BattleId);
+      }
+      if (TargetTileId != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(TargetTileId);
+      }
+      if (Attacker != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(Attacker);
+      }
+      if (Defender != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(Defender);
+      }
+      if (Round != 0) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(Round);
+      }
+      if (Rounds != 0) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(Rounds);
+      }
+      if (RoundEndsAtMs != 0L) {
+        output.WriteRawTag(56);
+        output.WriteInt64(RoundEndsAtMs);
+      }
+      if (AttackerTroops != 0) {
+        output.WriteRawTag(64);
+        output.WriteUInt32(AttackerTroops);
+      }
+      if (DefenderTroops != 0) {
+        output.WriteRawTag(72);
+        output.WriteUInt32(DefenderTroops);
+      }
+      if (AttackerWaiting != 0) {
+        output.WriteRawTag(80);
+        output.WriteUInt32(AttackerWaiting);
+      }
+      if (DefenderWaiting != 0) {
+        output.WriteRawTag(88);
+        output.WriteUInt32(DefenderWaiting);
+      }
+      if (Continuous != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(Continuous);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (BattleId != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(BattleId);
+      }
+      if (TargetTileId != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(TargetTileId);
+      }
+      if (Attacker != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(Attacker);
+      }
+      if (Defender != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(Defender);
+      }
+      if (Round != 0) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(Round);
+      }
+      if (Rounds != 0) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(Rounds);
+      }
+      if (RoundEndsAtMs != 0L) {
+        output.WriteRawTag(56);
+        output.WriteInt64(RoundEndsAtMs);
+      }
+      if (AttackerTroops != 0) {
+        output.WriteRawTag(64);
+        output.WriteUInt32(AttackerTroops);
+      }
+      if (DefenderTroops != 0) {
+        output.WriteRawTag(72);
+        output.WriteUInt32(DefenderTroops);
+      }
+      if (AttackerWaiting != 0) {
+        output.WriteRawTag(80);
+        output.WriteUInt32(AttackerWaiting);
+      }
+      if (DefenderWaiting != 0) {
+        output.WriteRawTag(88);
+        output.WriteUInt32(DefenderWaiting);
+      }
+      if (Continuous != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(Continuous);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (BattleId != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(BattleId);
+      }
+      if (TargetTileId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(TargetTileId);
+      }
+      if (Attacker != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Attacker);
+      }
+      if (Defender != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Defender);
+      }
+      if (Round != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Round);
+      }
+      if (Rounds != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Rounds);
+      }
+      if (RoundEndsAtMs != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(RoundEndsAtMs);
+      }
+      if (AttackerTroops != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(AttackerTroops);
+      }
+      if (DefenderTroops != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(DefenderTroops);
+      }
+      if (AttackerWaiting != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(AttackerWaiting);
+      }
+      if (DefenderWaiting != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(DefenderWaiting);
+      }
+      if (Continuous != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(WorldBattle other) {
+      if (other == null) {
+        return;
+      }
+      if (other.BattleId != 0UL) {
+        BattleId = other.BattleId;
+      }
+      if (other.TargetTileId != 0) {
+        TargetTileId = other.TargetTileId;
+      }
+      if (other.Attacker != 0) {
+        Attacker = other.Attacker;
+      }
+      if (other.Defender != 0) {
+        Defender = other.Defender;
+      }
+      if (other.Round != 0) {
+        Round = other.Round;
+      }
+      if (other.Rounds != 0) {
+        Rounds = other.Rounds;
+      }
+      if (other.RoundEndsAtMs != 0L) {
+        RoundEndsAtMs = other.RoundEndsAtMs;
+      }
+      if (other.AttackerTroops != 0) {
+        AttackerTroops = other.AttackerTroops;
+      }
+      if (other.DefenderTroops != 0) {
+        DefenderTroops = other.DefenderTroops;
+      }
+      if (other.AttackerWaiting != 0) {
+        AttackerWaiting = other.AttackerWaiting;
+      }
+      if (other.DefenderWaiting != 0) {
+        DefenderWaiting = other.DefenderWaiting;
+      }
+      if (other.Continuous != false) {
+        Continuous = other.Continuous;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            BattleId = input.ReadUInt64();
+            break;
+          }
+          case 16: {
+            TargetTileId = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            Attacker = input.ReadUInt32();
+            break;
+          }
+          case 32: {
+            Defender = input.ReadUInt32();
+            break;
+          }
+          case 40: {
+            Round = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            Rounds = input.ReadUInt32();
+            break;
+          }
+          case 56: {
+            RoundEndsAtMs = input.ReadInt64();
+            break;
+          }
+          case 64: {
+            AttackerTroops = input.ReadUInt32();
+            break;
+          }
+          case 72: {
+            DefenderTroops = input.ReadUInt32();
+            break;
+          }
+          case 80: {
+            AttackerWaiting = input.ReadUInt32();
+            break;
+          }
+          case 88: {
+            DefenderWaiting = input.ReadUInt32();
+            break;
+          }
+          case 96: {
+            Continuous = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            BattleId = input.ReadUInt64();
+            break;
+          }
+          case 16: {
+            TargetTileId = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            Attacker = input.ReadUInt32();
+            break;
+          }
+          case 32: {
+            Defender = input.ReadUInt32();
+            break;
+          }
+          case 40: {
+            Round = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            Rounds = input.ReadUInt32();
+            break;
+          }
+          case 56: {
+            RoundEndsAtMs = input.ReadInt64();
+            break;
+          }
+          case 64: {
+            AttackerTroops = input.ReadUInt32();
+            break;
+          }
+          case 72: {
+            DefenderTroops = input.ReadUInt32();
+            break;
+          }
+          case 80: {
+            AttackerWaiting = input.ReadUInt32();
+            break;
+          }
+          case 88: {
+            DefenderWaiting = input.ReadUInt32();
+            break;
+          }
+          case 96: {
+            Continuous = input.ReadBool();
+            break;
+          }
         }
       }
     }
@@ -1750,7 +2624,7 @@ namespace Slg.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1781,6 +2655,11 @@ namespace Slg.Protocol {
       captured_ = other.captured_;
       ruleVersion_ = other.ruleVersion_;
       seed_ = other.seed_;
+      rounds_ = other.rounds_;
+      attackerReinforcements_ = other.attackerReinforcements_;
+      defenderReinforcements_ = other.defenderReinforcements_;
+      retreatedPlayer_ = other.retreatedPlayer_;
+      reportId_ = other.reportId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1922,6 +2801,66 @@ namespace Slg.Protocol {
       }
     }
 
+    /// <summary>Field number for the "rounds" field.</summary>
+    public const int RoundsFieldNumber = 12;
+    private uint rounds_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Rounds {
+      get { return rounds_; }
+      set {
+        rounds_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "attacker_reinforcements" field.</summary>
+    public const int AttackerReinforcementsFieldNumber = 13;
+    private uint attackerReinforcements_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint AttackerReinforcements {
+      get { return attackerReinforcements_; }
+      set {
+        attackerReinforcements_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "defender_reinforcements" field.</summary>
+    public const int DefenderReinforcementsFieldNumber = 14;
+    private uint defenderReinforcements_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint DefenderReinforcements {
+      get { return defenderReinforcements_; }
+      set {
+        defenderReinforcements_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "retreated_player" field.</summary>
+    public const int RetreatedPlayerFieldNumber = 15;
+    private uint retreatedPlayer_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint RetreatedPlayer {
+      get { return retreatedPlayer_; }
+      set {
+        retreatedPlayer_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "report_id" field.</summary>
+    public const int ReportIdFieldNumber = 16;
+    private ulong reportId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong ReportId {
+      get { return reportId_; }
+      set {
+        reportId_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1948,6 +2887,11 @@ namespace Slg.Protocol {
       if (Captured != other.Captured) return false;
       if (RuleVersion != other.RuleVersion) return false;
       if (Seed != other.Seed) return false;
+      if (Rounds != other.Rounds) return false;
+      if (AttackerReinforcements != other.AttackerReinforcements) return false;
+      if (DefenderReinforcements != other.DefenderReinforcements) return false;
+      if (RetreatedPlayer != other.RetreatedPlayer) return false;
+      if (ReportId != other.ReportId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1966,6 +2910,11 @@ namespace Slg.Protocol {
       if (Captured != false) hash ^= Captured.GetHashCode();
       if (RuleVersion != 0) hash ^= RuleVersion.GetHashCode();
       if (Seed != 0UL) hash ^= Seed.GetHashCode();
+      if (Rounds != 0) hash ^= Rounds.GetHashCode();
+      if (AttackerReinforcements != 0) hash ^= AttackerReinforcements.GetHashCode();
+      if (DefenderReinforcements != 0) hash ^= DefenderReinforcements.GetHashCode();
+      if (RetreatedPlayer != 0) hash ^= RetreatedPlayer.GetHashCode();
+      if (ReportId != 0UL) hash ^= ReportId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2028,6 +2977,26 @@ namespace Slg.Protocol {
         output.WriteRawTag(88);
         output.WriteUInt64(Seed);
       }
+      if (Rounds != 0) {
+        output.WriteRawTag(96);
+        output.WriteUInt32(Rounds);
+      }
+      if (AttackerReinforcements != 0) {
+        output.WriteRawTag(104);
+        output.WriteUInt32(AttackerReinforcements);
+      }
+      if (DefenderReinforcements != 0) {
+        output.WriteRawTag(112);
+        output.WriteUInt32(DefenderReinforcements);
+      }
+      if (RetreatedPlayer != 0) {
+        output.WriteRawTag(120);
+        output.WriteUInt32(RetreatedPlayer);
+      }
+      if (ReportId != 0UL) {
+        output.WriteRawTag(128, 1);
+        output.WriteUInt64(ReportId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2082,6 +3051,26 @@ namespace Slg.Protocol {
         output.WriteRawTag(88);
         output.WriteUInt64(Seed);
       }
+      if (Rounds != 0) {
+        output.WriteRawTag(96);
+        output.WriteUInt32(Rounds);
+      }
+      if (AttackerReinforcements != 0) {
+        output.WriteRawTag(104);
+        output.WriteUInt32(AttackerReinforcements);
+      }
+      if (DefenderReinforcements != 0) {
+        output.WriteRawTag(112);
+        output.WriteUInt32(DefenderReinforcements);
+      }
+      if (RetreatedPlayer != 0) {
+        output.WriteRawTag(120);
+        output.WriteUInt32(RetreatedPlayer);
+      }
+      if (ReportId != 0UL) {
+        output.WriteRawTag(128, 1);
+        output.WriteUInt64(ReportId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2124,6 +3113,21 @@ namespace Slg.Protocol {
       }
       if (Seed != 0UL) {
         size += 1 + pb::CodedOutputStream.ComputeUInt64Size(Seed);
+      }
+      if (Rounds != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Rounds);
+      }
+      if (AttackerReinforcements != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(AttackerReinforcements);
+      }
+      if (DefenderReinforcements != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(DefenderReinforcements);
+      }
+      if (RetreatedPlayer != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(RetreatedPlayer);
+      }
+      if (ReportId != 0UL) {
+        size += 2 + pb::CodedOutputStream.ComputeUInt64Size(ReportId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -2169,6 +3173,21 @@ namespace Slg.Protocol {
       }
       if (other.Seed != 0UL) {
         Seed = other.Seed;
+      }
+      if (other.Rounds != 0) {
+        Rounds = other.Rounds;
+      }
+      if (other.AttackerReinforcements != 0) {
+        AttackerReinforcements = other.AttackerReinforcements;
+      }
+      if (other.DefenderReinforcements != 0) {
+        DefenderReinforcements = other.DefenderReinforcements;
+      }
+      if (other.RetreatedPlayer != 0) {
+        RetreatedPlayer = other.RetreatedPlayer;
+      }
+      if (other.ReportId != 0UL) {
+        ReportId = other.ReportId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -2231,6 +3250,26 @@ namespace Slg.Protocol {
           }
           case 88: {
             Seed = input.ReadUInt64();
+            break;
+          }
+          case 96: {
+            Rounds = input.ReadUInt32();
+            break;
+          }
+          case 104: {
+            AttackerReinforcements = input.ReadUInt32();
+            break;
+          }
+          case 112: {
+            DefenderReinforcements = input.ReadUInt32();
+            break;
+          }
+          case 120: {
+            RetreatedPlayer = input.ReadUInt32();
+            break;
+          }
+          case 128: {
+            ReportId = input.ReadUInt64();
             break;
           }
         }
@@ -2296,6 +3335,26 @@ namespace Slg.Protocol {
             Seed = input.ReadUInt64();
             break;
           }
+          case 96: {
+            Rounds = input.ReadUInt32();
+            break;
+          }
+          case 104: {
+            AttackerReinforcements = input.ReadUInt32();
+            break;
+          }
+          case 112: {
+            DefenderReinforcements = input.ReadUInt32();
+            break;
+          }
+          case 120: {
+            RetreatedPlayer = input.ReadUInt32();
+            break;
+          }
+          case 128: {
+            ReportId = input.ReadUInt64();
+            break;
+          }
         }
       }
     }
@@ -2318,7 +3377,7 @@ namespace Slg.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2346,6 +3405,7 @@ namespace Slg.Protocol {
       availableTroops_ = other.availableTroops_;
       troopCapacity_ = other.troopCapacity_;
       lastBattle_ = other.lastBattle_ != null ? other.lastBattle_.Clone() : null;
+      battles_ = other.battles_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2449,6 +3509,17 @@ namespace Slg.Protocol {
       }
     }
 
+    /// <summary>Field number for the "battles" field.</summary>
+    public const int BattlesFieldNumber = 9;
+    private static readonly pb::FieldCodec<global::Slg.Protocol.WorldBattle> _repeated_battles_codec
+        = pb::FieldCodec.ForMessage(74, global::Slg.Protocol.WorldBattle.Parser);
+    private readonly pbc::RepeatedField<global::Slg.Protocol.WorldBattle> battles_ = new pbc::RepeatedField<global::Slg.Protocol.WorldBattle>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Slg.Protocol.WorldBattle> Battles {
+      get { return battles_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -2472,6 +3543,7 @@ namespace Slg.Protocol {
       if (AvailableTroops != other.AvailableTroops) return false;
       if (TroopCapacity != other.TroopCapacity) return false;
       if (!object.Equals(LastBattle, other.LastBattle)) return false;
+      if(!battles_.Equals(other.battles_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2487,6 +3559,7 @@ namespace Slg.Protocol {
       if (AvailableTroops != 0) hash ^= AvailableTroops.GetHashCode();
       if (TroopCapacity != 0) hash ^= TroopCapacity.GetHashCode();
       if (lastBattle_ != null) hash ^= LastBattle.GetHashCode();
+      hash ^= battles_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2531,6 +3604,7 @@ namespace Slg.Protocol {
         output.WriteRawTag(66);
         output.WriteMessage(LastBattle);
       }
+      battles_.WriteTo(output, _repeated_battles_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2567,6 +3641,7 @@ namespace Slg.Protocol {
         output.WriteRawTag(66);
         output.WriteMessage(LastBattle);
       }
+      battles_.WriteTo(ref output, _repeated_battles_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2597,6 +3672,7 @@ namespace Slg.Protocol {
       if (lastBattle_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(LastBattle);
       }
+      size += battles_.CalculateSize(_repeated_battles_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -2632,6 +3708,7 @@ namespace Slg.Protocol {
         }
         LastBattle.MergeFrom(other.LastBattle);
       }
+      battles_.Add(other.battles_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -2684,6 +3761,10 @@ namespace Slg.Protocol {
               LastBattle = new global::Slg.Protocol.WorldBattleReport();
             }
             input.ReadMessage(LastBattle);
+            break;
+          }
+          case 74: {
+            battles_.AddEntriesFrom(input, _repeated_battles_codec);
             break;
           }
         }
@@ -2740,6 +3821,10 @@ namespace Slg.Protocol {
             input.ReadMessage(LastBattle);
             break;
           }
+          case 74: {
+            battles_.AddEntriesFrom(ref input, _repeated_battles_codec);
+            break;
+          }
         }
       }
     }
@@ -2763,7 +3848,7 @@ namespace Slg.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Slg.Protocol.WorldReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
