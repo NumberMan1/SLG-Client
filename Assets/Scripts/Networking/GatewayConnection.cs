@@ -25,6 +25,7 @@ namespace Slg.Networking
         // Orbit 帧头包含负载长度、消息类型、序号和错误码，整数按大端序编码。
         private const int HeaderSize = 10;
         private const int MaxPayload = 1024;
+        private const int MaxWorldReplyPayload = 8192;
         private const uint ProtocolVersion = 1;
         private const uint ConnectSequence = 1;
         private uint nextSequence = ConnectSequence;
@@ -67,7 +68,7 @@ namespace Slg.Networking
         private static int ValidateWorldHeader(ReadOnlySpan<byte> header, uint sequence)
         {
             int length = BinaryPrimitives.ReadUInt16BigEndian(header.Slice(0, 2));
-            if (length == 0 || length > MaxPayload ||
+            if (length == 0 || length > MaxWorldReplyPayload ||
                 BinaryPrimitives.ReadUInt16BigEndian(header.Slice(2, 2)) != (ushort)WorldMessageId.Reply ||
                 BinaryPrimitives.ReadUInt32BigEndian(header.Slice(4, 4)) != sequence ||
                 BinaryPrimitives.ReadUInt16BigEndian(header.Slice(8, 2)) != 0)

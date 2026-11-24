@@ -171,16 +171,17 @@ namespace Slg
             {
                 while (this && ReferenceEquals(connection, opened))
                 {
-                    // 新指令可唤醒轮询。连接仍逐个交换消息，失败后的同一指令按原间隔重试。
-                    var order = world != null && pendingMarch is { } march && march.Instance == world.Instance
-                        ? march.Order : null;
+                    // 重连后沿用待确认指令的原实例，即使当前地图实例已经变化也能查询回执。
+                    var order = pendingMarch?.Order;
+                    var knownInstance = pendingMarch?.Instance ?? world?.Instance ?? "";
                     if (Time.realtimeSinceStartupAsDouble >= nextSnapshotAt || (order != null && order.CommandId != lastAttempt))
                     {
                         lastAttempt = order?.CommandId;
                         var reply = await opened.UpdateWorldAsync(new WorldRequest
                         {
-                            KnownInstance = world?.Instance ?? "",
-                            KnownRevision = world?.Revision ?? 0,
+                            KnownInstance = knownInstance,
+                            KnownRevision = world?.Instance == knownInstance ? world.Revision : 0,
+                            KnownTileRevision = world?.Instance == knownInstance && world.Tiles.Count > 0 ? world.TileRevision : 0,
                             KnownBattleId = battleReports.Count == 0 ? 0 : battleReports[^1].BattleId,
                             KnownReportId = battleReports.Count == 0 ? 0 : ReportCursor(battleReports[^1]),
                             Order = order
@@ -216,17 +217,22 @@ namespace Slg
                 serverTimeMs = reply.ServerTimeMs;
                 serverTimeReceivedAt = Time.realtimeSinceStartupAsDouble;
             }
-            bool changed = reply.Result == WorldResult.WorldChanged ||
-                (reply.Snapshot != null && pendingMarch is { } march && march.Instance != reply.Snapshot.Instance);
+            // 回执和地图实例独立判断。新快照也可以随旧指令的成功回执一起返回。
+            bool changed = reply.Result == WorldResult.WorldChanged;
             bool sameWorld = world != null && (reply.Snapshot == null || world.Instance == reply.Snapshot.Instance);
-            // 世界实例变化时从服务端重新读取历史，旧游标不能用于新进程。
+            var snapshot = reply.Snapshot;
+            if (sameWorld && snapshot != null && snapshot.Tiles.Count == 0 && snapshot.HasTileRevision &&
+                world.HasTileRevision && snapshot.TileRevision == world.TileRevision)
+            {
+                snapshot.Tiles.Add(world.Tiles);
+            }
+            // 世界实例变化时清空战报缓存，并从服务端重新读取历史。
             if (!sameWorld || reply.Result == WorldResult.Full)
             {
                 battleReports.Clear();
                 battleReportIndex = 0;
             }
-            if (changed || reply.Result == WorldResult.Full) world = reply.Snapshot;
-            else if (reply.Snapshot != null) world = reply.Snapshot;
+            if (changed || reply.Result == WorldResult.Full || snapshot != null) world = snapshot;
             worldView.ApplySnapshot(world);
             if (world != null)
             {

@@ -11,13 +11,14 @@ namespace Slg.Networking
 {
     public sealed partial class GatewayConnection
     {
-        [DllImport("__Internal")] private static extern int SlgSocketOpen(string url);
+        [DllImport("__Internal")] private static extern int SlgSocketOpen(string url, int sendCapacity, int receiveCapacity);
         [DllImport("__Internal")] private static extern int SlgSocketState(int id);
         [DllImport("__Internal")] private static extern int SlgSocketSend(int id, byte[] data, int length);
         [DllImport("__Internal")] private static extern int SlgSocketReceive(int id, byte[] data, int capacity);
         [DllImport("__Internal")] private static extern void SlgSocketClose(int id);
 
         private int socketId;
+        private byte[] worldReceiveBuffer;
 
         private GatewayConnection(int socketId, ConnectReply session)
         {
@@ -39,7 +40,7 @@ namespace Slg.Networking
             {
                 Scheme = gateway.Scheme == "https" ? "wss" : "ws"
             };
-            int id = SlgSocketOpen(endpoint.Uri.AbsoluteUri);
+            int id = SlgSocketOpen(endpoint.Uri.AbsoluteUri, HeaderSize + MaxPayload, HeaderSize + MaxWorldReplyPayload);
             double deadline = Time.realtimeSinceStartupAsDouble + 5;
             try
             {
@@ -112,7 +113,7 @@ namespace Slg.Networking
             {
                 throw new GatewayException("无法发送世界请求。");
             }
-            var buffer = new byte[HeaderSize + MaxPayload];
+            var buffer = worldReceiveBuffer ??= new byte[HeaderSize + MaxWorldReplyPayload];
             double deadline = Time.realtimeSinceStartupAsDouble + 5;
             int size;
             // 浏览器每次返回一整条消息，待网关回包期间让出主线程。

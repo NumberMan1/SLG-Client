@@ -2,14 +2,14 @@
 mergeInto(LibraryManager.library, {
     $SlgSockets: { nextId: 1, entries: {} },
     SlgSocketOpen__deps: ['$SlgSockets'],
-    SlgSocketOpen: function(url) {
+    SlgSocketOpen: function(url, sendCapacity, receiveCapacity) {
         var id = SlgSockets.nextId++;
-        var entry = { socket: new WebSocket(UTF8ToString(url)), messages: [] };
+        var entry = { socket: new WebSocket(UTF8ToString(url)), messages: [], sendCapacity: sendCapacity };
         SlgSockets.entries[id] = entry;
         entry.socket.binaryType = 'arraybuffer';
         entry.socket.onmessage = function(event) {
-            // 1034 字节为帧头加负载上限，队列长度限制浏览器端缓存占用。
-            if (!(event.data instanceof ArrayBuffer) || event.data.byteLength > 1034 || entry.messages.length >= 16) {
+            // 上限来自 Unity 的协议配置，接收允许较大的地图回包。
+            if (!(event.data instanceof ArrayBuffer) || event.data.byteLength > receiveCapacity || entry.messages.length >= 16) {
                 entry.socket.close(1009, 'Frame limit exceeded');
                 return;
             }
@@ -26,7 +26,7 @@ mergeInto(LibraryManager.library, {
     SlgSocketSend__deps: ['$SlgSockets'],
     SlgSocketSend: function(id, data, length) {
         var entry = SlgSockets.entries[id];
-        if (!entry || entry.socket.readyState !== 1 || length > 1034) return 0;
+        if (!entry || entry.socket.readyState !== 1 || length > entry.sendCapacity) return 0;
         try {
             // 复制 WASM 内存中的帧，再交给浏览器异步发送。
             entry.socket.send(HEAPU8.slice(data, data + length));

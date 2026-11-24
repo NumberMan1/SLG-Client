@@ -28,70 +28,72 @@ namespace Slg.Protocol {
             "ZGVyEhIKCmNvbW1hbmRfaWQYASABKAkSFgoOdGFyZ2V0X3RpbGVfaWQYAiAB",
             "KA0SDgoGdHJvb3BzGAMgASgNEhQKDHJvdW5kX2JhdHRsZRgEIAEoCBIbChNy",
             "ZWluZm9yY2VfYmF0dGxlX2lkGAUgASgEEhkKEWNvbnRpbnVvdXNfYmF0dGxl",
-            "GAYgASgIEhkKEXJldHJlYXRfYmF0dGxlX2lkGAcgASgEIssBCgxXb3JsZFJl",
+            "GAYgASgIEhkKEXJldHJlYXRfYmF0dGxlX2lkGAcgASgEIoUCCgxXb3JsZFJl",
             "cXVlc3QSFgoOa25vd25faW5zdGFuY2UYASABKAkSFgoOa25vd25fcmV2aXNp",
             "b24YAiABKAQSJwoFb3JkZXIYAyABKAsyGC5zbGcud29ybGQudjEuTWFyY2hP",
             "cmRlchIcCg9rbm93bl9iYXR0bGVfaWQYBCABKARIAIgBARIcCg9rbm93bl9y",
-            "ZXBvcnRfaWQYBSABKARIAYgBAUISChBfa25vd25fYmF0dGxlX2lkQhIKEF9r",
-            "bm93bl9yZXBvcnRfaWQiTAoMV29ybGRDb21tYW5kEg8KB2FjY291bnQYASAB",
-            "KAkSKwoHcmVxdWVzdBgCIAEoCzIaLnNsZy53b3JsZC52MS5Xb3JsZFJlcXVl",
-            "c3QiXAoJV29ybGRUaWxlEgoKAmlkGAEgASgNEgkKAXEYAiABKBESCQoBchgD",
-            "IAEoERINCgVvd25lchgEIAEoDRIMCgRob21lGAUgASgNEhAKCGdhcnJpc29u",
-            "GAYgASgNIqEBCgpXb3JsZE1hcmNoEg4KBnBsYXllchgBIAEoDRIWCg5zb3Vy",
-            "Y2VfdGlsZV9pZBgCIAEoDRIWCg50YXJnZXRfdGlsZV9pZBgDIAEoDRIVCg1h",
-            "cnJpdmVzX2F0X21zGAQgASgDEg4KBnRyb29wcxgFIAEoDRIPCgdob3N0aWxl",
-            "GAYgASgIEhsKE3JlaW5mb3JjZV9iYXR0bGVfaWQYByABKAQijwIKC1dvcmxk",
-            "QmF0dGxlEhEKCWJhdHRsZV9pZBgBIAEoBBIWCg50YXJnZXRfdGlsZV9pZBgC",
-            "IAEoDRIQCghhdHRhY2tlchgDIAEoDRIQCghkZWZlbmRlchgEIAEoDRINCgVy",
-            "b3VuZBgFIAEoDRIOCgZyb3VuZHMYBiABKA0SGAoQcm91bmRfZW5kc19hdF9t",
-            "cxgHIAEoAxIXCg9hdHRhY2tlcl90cm9vcHMYCCABKA0SFwoPZGVmZW5kZXJf",
-            "dHJvb3BzGAkgASgNEhgKEGF0dGFja2VyX3dhaXRpbmcYCiABKA0SGAoQZGVm",
-            "ZW5kZXJfd2FpdGluZxgLIAEoDRISCgpjb250aW51b3VzGAwgASgIIoEDChFX",
-            "b3JsZEJhdHRsZVJlcG9ydBIRCgliYXR0bGVfaWQYASABKAQSFgoOdGFyZ2V0",
-            "X3RpbGVfaWQYAiABKA0SEAoIYXR0YWNrZXIYAyABKA0SEAoIZGVmZW5kZXIY",
-            "BCABKA0SFwoPYXR0YWNrZXJfdHJvb3BzGAUgASgNEhcKD2RlZmVuZGVyX3Ry",
-            "b29wcxgGIAEoDRIaChJhdHRhY2tlcl9zdXJ2aXZvcnMYByABKA0SGgoSZGVm",
-            "ZW5kZXJfc3Vydml2b3JzGAggASgNEhAKCGNhcHR1cmVkGAkgASgIEhQKDHJ1",
-            "bGVfdmVyc2lvbhgKIAEoDRIMCgRzZWVkGAsgASgEEg4KBnJvdW5kcxgMIAEo",
-            "DRIfChdhdHRhY2tlcl9yZWluZm9yY2VtZW50cxgNIAEoDRIfChdkZWZlbmRl",
-            "cl9yZWluZm9yY2VtZW50cxgOIAEoDRIYChByZXRyZWF0ZWRfcGxheWVyGA8g",
-            "ASgNEhEKCXJlcG9ydF9pZBgQIAEoBCKvAgoNV29ybGRTbmFwc2hvdBIQCghp",
-            "bnN0YW5jZRgBIAEoCRIQCghyZXZpc2lvbhgCIAEoBBITCgt5b3VyX3BsYXll",
-            "chgDIAEoDRImCgV0aWxlcxgEIAMoCzIXLnNsZy53b3JsZC52MS5Xb3JsZFRp",
-            "bGUSKQoHbWFyY2hlcxgFIAMoCzIYLnNsZy53b3JsZC52MS5Xb3JsZE1hcmNo",
-            "EhgKEGF2YWlsYWJsZV90cm9vcHMYBiABKA0SFgoOdHJvb3BfY2FwYWNpdHkY",
-            "ByABKA0SNAoLbGFzdF9iYXR0bGUYCCABKAsyHy5zbGcud29ybGQudjEuV29y",
-            "bGRCYXR0bGVSZXBvcnQSKgoHYmF0dGxlcxgJIAMoCzIZLnNsZy53b3JsZC52",
-            "MS5Xb3JsZEJhdHRsZSLrAQoKV29ybGRSZXBseRIpCgZyZXN1bHQYASABKA4y",
-            "GS5zbGcud29ybGQudjEuV29ybGRSZXN1bHQSFgoOc2VydmVyX3RpbWVfbXMY",
-            "AiABKAMSLQoIc25hcHNob3QYAyABKAsyGy5zbGcud29ybGQudjEuV29ybGRT",
-            "bmFwc2hvdBIdChBhdmFpbGFibGVfdHJvb3BzGAQgASgNSACIAQESNwoOYmF0",
-            "dGxlX3JlcG9ydHMYBSADKAsyHy5zbGcud29ybGQudjEuV29ybGRCYXR0bGVS",
-            "ZXBvcnRCEwoRX2F2YWlsYWJsZV90cm9vcHMqbAoOV29ybGRNZXNzYWdlSWQS",
-            "IAocV09STERfTUVTU0FHRV9JRF9VTlNQRUNJRklFRBAAEhwKGFdPUkxEX01F",
-            "U1NBR0VfSURfUkVRVUVTVBADEhoKFldPUkxEX01FU1NBR0VfSURfUkVQTFkQ",
-            "BCqFAwoLV29ybGRSZXN1bHQSEwoPV09STERfUkVTVUxUX09LEAASFQoRV09S",
-            "TERfUkVTVUxUX0ZVTEwQARIfChtXT1JMRF9SRVNVTFRfSU5WQUxJRF9UQVJH",
-            "RVQQAhIhCh1XT1JMRF9SRVNVTFRfQUxSRUFEWV9NQVJDSElORxADEhkKFVdP",
-            "UkxEX1JFU1VMVF9SRVNFUlZFRBAEEh4KGldPUkxEX1JFU1VMVF9JTlZBTElE",
-            "X09SREVSEAUSHgoaV09STERfUkVTVUxUX1dPUkxEX0NIQU5HRUQQBhIcChhX",
-            "T1JMRF9SRVNVTFRfVU5BVkFJTEFCTEUQBxIkCiBXT1JMRF9SRVNVTFRfSU5T",
-            "VUZGSUNJRU5UX1RST09QUxAIEiUKIVdPUkxEX1JFU1VMVF9SRUlORk9SQ0VN",
-            "RU5UX0NMT1NFRBAJEiAKHFdPUkxEX1JFU1VMVF9CQVRUTEVfQ0FQQUNJVFkQ",
-            "ChIeChpXT1JMRF9SRVNVTFRfQkFUVExFX0NMT1NFRBALQkFaMGdpdGh1Yi5j",
-            "b20vTnVtYmVyTWFuMS9zbGctc2VydmVyL3Byb3RvO3Nlc3Npb25wYqoCDFNs",
-            "Zy5Qcm90b2NvbGIGcHJvdG8z"));
+            "ZXBvcnRfaWQYBSABKARIAYgBARIgChNrbm93bl90aWxlX3JldmlzaW9uGAYg",
+            "ASgESAKIAQFCEgoQX2tub3duX2JhdHRsZV9pZEISChBfa25vd25fcmVwb3J0",
+            "X2lkQhYKFF9rbm93bl90aWxlX3JldmlzaW9uIkwKDFdvcmxkQ29tbWFuZBIP",
+            "CgdhY2NvdW50GAEgASgJEisKB3JlcXVlc3QYAiABKAsyGi5zbGcud29ybGQu",
+            "djEuV29ybGRSZXF1ZXN0IlwKCVdvcmxkVGlsZRIKCgJpZBgBIAEoDRIJCgFx",
+            "GAIgASgREgkKAXIYAyABKBESDQoFb3duZXIYBCABKA0SDAoEaG9tZRgFIAEo",
+            "DRIQCghnYXJyaXNvbhgGIAEoDSKhAQoKV29ybGRNYXJjaBIOCgZwbGF5ZXIY",
+            "ASABKA0SFgoOc291cmNlX3RpbGVfaWQYAiABKA0SFgoOdGFyZ2V0X3RpbGVf",
+            "aWQYAyABKA0SFQoNYXJyaXZlc19hdF9tcxgEIAEoAxIOCgZ0cm9vcHMYBSAB",
+            "KA0SDwoHaG9zdGlsZRgGIAEoCBIbChNyZWluZm9yY2VfYmF0dGxlX2lkGAcg",
+            "ASgEIo8CCgtXb3JsZEJhdHRsZRIRCgliYXR0bGVfaWQYASABKAQSFgoOdGFy",
+            "Z2V0X3RpbGVfaWQYAiABKA0SEAoIYXR0YWNrZXIYAyABKA0SEAoIZGVmZW5k",
+            "ZXIYBCABKA0SDQoFcm91bmQYBSABKA0SDgoGcm91bmRzGAYgASgNEhgKEHJv",
+            "dW5kX2VuZHNfYXRfbXMYByABKAMSFwoPYXR0YWNrZXJfdHJvb3BzGAggASgN",
+            "EhcKD2RlZmVuZGVyX3Ryb29wcxgJIAEoDRIYChBhdHRhY2tlcl93YWl0aW5n",
+            "GAogASgNEhgKEGRlZmVuZGVyX3dhaXRpbmcYCyABKA0SEgoKY29udGludW91",
+            "cxgMIAEoCCKBAwoRV29ybGRCYXR0bGVSZXBvcnQSEQoJYmF0dGxlX2lkGAEg",
+            "ASgEEhYKDnRhcmdldF90aWxlX2lkGAIgASgNEhAKCGF0dGFja2VyGAMgASgN",
+            "EhAKCGRlZmVuZGVyGAQgASgNEhcKD2F0dGFja2VyX3Ryb29wcxgFIAEoDRIX",
+            "Cg9kZWZlbmRlcl90cm9vcHMYBiABKA0SGgoSYXR0YWNrZXJfc3Vydml2b3Jz",
+            "GAcgASgNEhoKEmRlZmVuZGVyX3N1cnZpdm9ycxgIIAEoDRIQCghjYXB0dXJl",
+            "ZBgJIAEoCBIUCgxydWxlX3ZlcnNpb24YCiABKA0SDAoEc2VlZBgLIAEoBBIO",
+            "CgZyb3VuZHMYDCABKA0SHwoXYXR0YWNrZXJfcmVpbmZvcmNlbWVudHMYDSAB",
+            "KA0SHwoXZGVmZW5kZXJfcmVpbmZvcmNlbWVudHMYDiABKA0SGAoQcmV0cmVh",
+            "dGVkX3BsYXllchgPIAEoDRIRCglyZXBvcnRfaWQYECABKAQi3QIKDVdvcmxk",
+            "U25hcHNob3QSEAoIaW5zdGFuY2UYASABKAkSEAoIcmV2aXNpb24YAiABKAQS",
+            "EwoLeW91cl9wbGF5ZXIYAyABKA0SJgoFdGlsZXMYBCADKAsyFy5zbGcud29y",
+            "bGQudjEuV29ybGRUaWxlEikKB21hcmNoZXMYBSADKAsyGC5zbGcud29ybGQu",
+            "djEuV29ybGRNYXJjaBIYChBhdmFpbGFibGVfdHJvb3BzGAYgASgNEhYKDnRy",
+            "b29wX2NhcGFjaXR5GAcgASgNEjQKC2xhc3RfYmF0dGxlGAggASgLMh8uc2xn",
+            "LndvcmxkLnYxLldvcmxkQmF0dGxlUmVwb3J0EioKB2JhdHRsZXMYCSADKAsy",
+            "GS5zbGcud29ybGQudjEuV29ybGRCYXR0bGUSGgoNdGlsZV9yZXZpc2lvbhgK",
+            "IAEoBEgAiAEBQhAKDl90aWxlX3JldmlzaW9uIusBCgpXb3JsZFJlcGx5EikK",
+            "BnJlc3VsdBgBIAEoDjIZLnNsZy53b3JsZC52MS5Xb3JsZFJlc3VsdBIWCg5z",
+            "ZXJ2ZXJfdGltZV9tcxgCIAEoAxItCghzbmFwc2hvdBgDIAEoCzIbLnNsZy53",
+            "b3JsZC52MS5Xb3JsZFNuYXBzaG90Eh0KEGF2YWlsYWJsZV90cm9vcHMYBCAB",
+            "KA1IAIgBARI3Cg5iYXR0bGVfcmVwb3J0cxgFIAMoCzIfLnNsZy53b3JsZC52",
+            "MS5Xb3JsZEJhdHRsZVJlcG9ydEITChFfYXZhaWxhYmxlX3Ryb29wcypsCg5X",
+            "b3JsZE1lc3NhZ2VJZBIgChxXT1JMRF9NRVNTQUdFX0lEX1VOU1BFQ0lGSUVE",
+            "EAASHAoYV09STERfTUVTU0FHRV9JRF9SRVFVRVNUEAMSGgoWV09STERfTUVT",
+            "U0FHRV9JRF9SRVBMWRAEKoUDCgtXb3JsZFJlc3VsdBITCg9XT1JMRF9SRVNV",
+            "TFRfT0sQABIVChFXT1JMRF9SRVNVTFRfRlVMTBABEh8KG1dPUkxEX1JFU1VM",
+            "VF9JTlZBTElEX1RBUkdFVBACEiEKHVdPUkxEX1JFU1VMVF9BTFJFQURZX01B",
+            "UkNISU5HEAMSGQoVV09STERfUkVTVUxUX1JFU0VSVkVEEAQSHgoaV09STERf",
+            "UkVTVUxUX0lOVkFMSURfT1JERVIQBRIeChpXT1JMRF9SRVNVTFRfV09STERf",
+            "Q0hBTkdFRBAGEhwKGFdPUkxEX1JFU1VMVF9VTkFWQUlMQUJMRRAHEiQKIFdP",
+            "UkxEX1JFU1VMVF9JTlNVRkZJQ0lFTlRfVFJPT1BTEAgSJQohV09STERfUkVT",
+            "VUxUX1JFSU5GT1JDRU1FTlRfQ0xPU0VEEAkSIAocV09STERfUkVTVUxUX0JB",
+            "VFRMRV9DQVBBQ0lUWRAKEh4KGldPUkxEX1JFU1VMVF9CQVRUTEVfQ0xPU0VE",
+            "EAtCQVowZ2l0aHViLmNvbS9OdW1iZXJNYW4xL3NsZy1zZXJ2ZXIvcHJvdG87",
+            "c2Vzc2lvbnBiqgIMU2xnLlByb3RvY29sYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Slg.Protocol.WorldMessageId), typeof(global::Slg.Protocol.WorldResult), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.MarchOrder), global::Slg.Protocol.MarchOrder.Parser, new[]{ "CommandId", "TargetTileId", "Troops", "RoundBattle", "ReinforceBattleId", "ContinuousBattle", "RetreatBattleId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldRequest), global::Slg.Protocol.WorldRequest.Parser, new[]{ "KnownInstance", "KnownRevision", "Order", "KnownBattleId", "KnownReportId" }, new[]{ "KnownBattleId", "KnownReportId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldRequest), global::Slg.Protocol.WorldRequest.Parser, new[]{ "KnownInstance", "KnownRevision", "Order", "KnownBattleId", "KnownReportId", "KnownTileRevision" }, new[]{ "KnownBattleId", "KnownReportId", "KnownTileRevision" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldCommand), global::Slg.Protocol.WorldCommand.Parser, new[]{ "Account", "Request" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldTile), global::Slg.Protocol.WorldTile.Parser, new[]{ "Id", "Q", "R", "Owner", "Home", "Garrison" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldMarch), global::Slg.Protocol.WorldMarch.Parser, new[]{ "Player", "SourceTileId", "TargetTileId", "ArrivesAtMs", "Troops", "Hostile", "ReinforceBattleId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldBattle), global::Slg.Protocol.WorldBattle.Parser, new[]{ "BattleId", "TargetTileId", "Attacker", "Defender", "Round", "Rounds", "RoundEndsAtMs", "AttackerTroops", "DefenderTroops", "AttackerWaiting", "DefenderWaiting", "Continuous" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldBattleReport), global::Slg.Protocol.WorldBattleReport.Parser, new[]{ "BattleId", "TargetTileId", "Attacker", "Defender", "AttackerTroops", "DefenderTroops", "AttackerSurvivors", "DefenderSurvivors", "Captured", "RuleVersion", "Seed", "Rounds", "AttackerReinforcements", "DefenderReinforcements", "RetreatedPlayer", "ReportId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldSnapshot), global::Slg.Protocol.WorldSnapshot.Parser, new[]{ "Instance", "Revision", "YourPlayer", "Tiles", "Marches", "AvailableTroops", "TroopCapacity", "LastBattle", "Battles" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldSnapshot), global::Slg.Protocol.WorldSnapshot.Parser, new[]{ "Instance", "Revision", "YourPlayer", "Tiles", "Marches", "AvailableTroops", "TroopCapacity", "LastBattle", "Battles", "TileRevision" }, new[]{ "TileRevision" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Slg.Protocol.WorldReply), global::Slg.Protocol.WorldReply.Parser, new[]{ "Result", "ServerTimeMs", "Snapshot", "AvailableTroops", "BattleReports" }, new[]{ "AvailableTroops" }, null, null, null)
           }));
     }
@@ -603,6 +605,7 @@ namespace Slg.Protocol {
       order_ = other.order_ != null ? other.order_.Clone() : null;
       knownBattleId_ = other.knownBattleId_;
       knownReportId_ = other.knownReportId_;
+      knownTileRevision_ = other.knownTileRevision_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -708,6 +711,36 @@ namespace Slg.Protocol {
       _hasBits0 &= ~2;
     }
 
+    /// <summary>Field number for the "known_tile_revision" field.</summary>
+    public const int KnownTileRevisionFieldNumber = 6;
+    private readonly static ulong KnownTileRevisionDefaultValue = 0UL;
+
+    private ulong knownTileRevision_;
+    /// <summary>
+    /// 支持分开同步地块的客户端始终携带，首次进入或清除地块缓存时为 0。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong KnownTileRevision {
+      get { if ((_hasBits0 & 4) != 0) { return knownTileRevision_; } else { return KnownTileRevisionDefaultValue; } }
+      set {
+        _hasBits0 |= 4;
+        knownTileRevision_ = value;
+      }
+    }
+    /// <summary>Gets whether the "known_tile_revision" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasKnownTileRevision {
+      get { return (_hasBits0 & 4) != 0; }
+    }
+    /// <summary>Clears the value of the "known_tile_revision" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearKnownTileRevision() {
+      _hasBits0 &= ~4;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -728,6 +761,7 @@ namespace Slg.Protocol {
       if (!object.Equals(Order, other.Order)) return false;
       if (KnownBattleId != other.KnownBattleId) return false;
       if (KnownReportId != other.KnownReportId) return false;
+      if (KnownTileRevision != other.KnownTileRevision) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -740,6 +774,7 @@ namespace Slg.Protocol {
       if (order_ != null) hash ^= Order.GetHashCode();
       if (HasKnownBattleId) hash ^= KnownBattleId.GetHashCode();
       if (HasKnownReportId) hash ^= KnownReportId.GetHashCode();
+      if (HasKnownTileRevision) hash ^= KnownTileRevision.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -778,6 +813,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(40);
         output.WriteUInt64(KnownReportId);
       }
+      if (HasKnownTileRevision) {
+        output.WriteRawTag(48);
+        output.WriteUInt64(KnownTileRevision);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -808,6 +847,10 @@ namespace Slg.Protocol {
         output.WriteRawTag(40);
         output.WriteUInt64(KnownReportId);
       }
+      if (HasKnownTileRevision) {
+        output.WriteRawTag(48);
+        output.WriteUInt64(KnownTileRevision);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -832,6 +875,9 @@ namespace Slg.Protocol {
       }
       if (HasKnownReportId) {
         size += 1 + pb::CodedOutputStream.ComputeUInt64Size(KnownReportId);
+      }
+      if (HasKnownTileRevision) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(KnownTileRevision);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -862,6 +908,9 @@ namespace Slg.Protocol {
       }
       if (other.HasKnownReportId) {
         KnownReportId = other.KnownReportId;
+      }
+      if (other.HasKnownTileRevision) {
+        KnownTileRevision = other.KnownTileRevision;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -905,6 +954,10 @@ namespace Slg.Protocol {
             KnownReportId = input.ReadUInt64();
             break;
           }
+          case 48: {
+            KnownTileRevision = input.ReadUInt64();
+            break;
+          }
         }
       }
     #endif
@@ -945,6 +998,10 @@ namespace Slg.Protocol {
           }
           case 40: {
             KnownReportId = input.ReadUInt64();
+            break;
+          }
+          case 48: {
+            KnownTileRevision = input.ReadUInt64();
             break;
           }
         }
@@ -3370,6 +3427,7 @@ namespace Slg.Protocol {
   {
     private static readonly pb::MessageParser<WorldSnapshot> _parser = new pb::MessageParser<WorldSnapshot>(() => new WorldSnapshot());
     private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<WorldSnapshot> Parser { get { return _parser; } }
@@ -3397,6 +3455,7 @@ namespace Slg.Protocol {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public WorldSnapshot(WorldSnapshot other) : this() {
+      _hasBits0 = other._hasBits0;
       instance_ = other.instance_;
       revision_ = other.revision_;
       yourPlayer_ = other.yourPlayer_;
@@ -3406,6 +3465,7 @@ namespace Slg.Protocol {
       troopCapacity_ = other.troopCapacity_;
       lastBattle_ = other.lastBattle_ != null ? other.lastBattle_.Clone() : null;
       battles_ = other.battles_.Clone();
+      tileRevision_ = other.tileRevision_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3520,6 +3580,36 @@ namespace Slg.Protocol {
       get { return battles_; }
     }
 
+    /// <summary>Field number for the "tile_revision" field.</summary>
+    public const int TileRevisionFieldNumber = 10;
+    private readonly static ulong TileRevisionDefaultValue = 0UL;
+
+    private ulong tileRevision_;
+    /// <summary>
+    /// 当客户端已持有此版本时，回包省略 tiles，沿用缓存的地块。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong TileRevision {
+      get { if ((_hasBits0 & 1) != 0) { return tileRevision_; } else { return TileRevisionDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        tileRevision_ = value;
+      }
+    }
+    /// <summary>Gets whether the "tile_revision" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasTileRevision {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "tile_revision" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearTileRevision() {
+      _hasBits0 &= ~1;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -3544,6 +3634,7 @@ namespace Slg.Protocol {
       if (TroopCapacity != other.TroopCapacity) return false;
       if (!object.Equals(LastBattle, other.LastBattle)) return false;
       if(!battles_.Equals(other.battles_)) return false;
+      if (TileRevision != other.TileRevision) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3560,6 +3651,7 @@ namespace Slg.Protocol {
       if (TroopCapacity != 0) hash ^= TroopCapacity.GetHashCode();
       if (lastBattle_ != null) hash ^= LastBattle.GetHashCode();
       hash ^= battles_.GetHashCode();
+      if (HasTileRevision) hash ^= TileRevision.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3605,6 +3697,10 @@ namespace Slg.Protocol {
         output.WriteMessage(LastBattle);
       }
       battles_.WriteTo(output, _repeated_battles_codec);
+      if (HasTileRevision) {
+        output.WriteRawTag(80);
+        output.WriteUInt64(TileRevision);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3642,6 +3738,10 @@ namespace Slg.Protocol {
         output.WriteMessage(LastBattle);
       }
       battles_.WriteTo(ref output, _repeated_battles_codec);
+      if (HasTileRevision) {
+        output.WriteRawTag(80);
+        output.WriteUInt64(TileRevision);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -3673,6 +3773,9 @@ namespace Slg.Protocol {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(LastBattle);
       }
       size += battles_.CalculateSize(_repeated_battles_codec);
+      if (HasTileRevision) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(TileRevision);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -3709,6 +3812,9 @@ namespace Slg.Protocol {
         LastBattle.MergeFrom(other.LastBattle);
       }
       battles_.Add(other.battles_);
+      if (other.HasTileRevision) {
+        TileRevision = other.TileRevision;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -3767,6 +3873,10 @@ namespace Slg.Protocol {
             battles_.AddEntriesFrom(input, _repeated_battles_codec);
             break;
           }
+          case 80: {
+            TileRevision = input.ReadUInt64();
+            break;
+          }
         }
       }
     #endif
@@ -3823,6 +3933,10 @@ namespace Slg.Protocol {
           }
           case 74: {
             battles_.AddEntriesFrom(ref input, _repeated_battles_codec);
+            break;
+          }
+          case 80: {
+            TileRevision = input.ReadUInt64();
             break;
           }
         }

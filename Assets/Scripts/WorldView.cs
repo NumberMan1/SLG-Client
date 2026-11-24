@@ -7,9 +7,11 @@ namespace Slg
     internal sealed class WorldView
     {
         private const float HexWidth = 1.7320508f;
+        private const float LabelRadius = 48;
         private const double MarchSeconds = 3;
         private const double NoticeSeconds = 2.6;
         private static readonly uint[] MarchChoices = { 20, 40, 60 };
+        private static readonly Vector2Int[] Neighbors = { new(1, 0), new(1, -1), new(0, -1), new(-1, 0), new(-1, 1), new(0, 1) };
         private static readonly Vector2 RouteOffset = new(0, -26);
         private static readonly Color Panel = new(0.071f, 0.124f, 0.135f);
         private static readonly Color Inset = new(0.052f, 0.091f, 0.099f);
@@ -21,6 +23,7 @@ namespace Slg
         private static readonly Color Enemy = new(0.89f, 0.54f, 0.42f);
 
         private readonly Dictionary<uint, WorldTile> tiles = new();
+        private readonly Dictionary<Vector2Int, WorldTile> tilesByPosition = new();
         private readonly Dictionary<uint, WorldBattle> battles = new();
         private readonly Dictionary<uint, int> inbound = new();
         private readonly Dictionary<uint, WorldTile> sources = new();
@@ -34,6 +37,7 @@ namespace Slg
         private readonly GUIStyle badge;
         private readonly GUIStyle primary;
         private WorldSnapshot world;
+        private Vector2 mapMin, mapMax;
         private bool hasMarch;
         private bool attacking;
         private uint selectedTile;
@@ -58,14 +62,17 @@ namespace Slg
         {
             if (ReferenceEquals(world, snapshot)) return;
 
-            if (snapshot == null || world?.Instance != snapshot.Instance)
+            bool sameWorld = snapshot != null && world?.Instance == snapshot.Instance;
+            bool sameTiles = sameWorld && snapshot.HasTileRevision && world.HasTileRevision &&
+                snapshot.TileRevision == world.TileRevision && snapshot.Tiles.Count == tiles.Count;
+            if (!sameWorld)
             {
                 // 重新加入时只显示当前地图，旧地块、定位和占领提示均随实例失效。
                 selectedTile = 0;
                 locateUntil = 0;
                 notices.Clear();
             }
-            else
+            else if (!sameTiles)
             {
                 foreach (var tile in snapshot.Tiles)
                 {
@@ -75,7 +82,11 @@ namespace Slg
             }
 
             world = snapshot;
-            tiles.Clear();
+            if (!sameTiles)
+            {
+                tiles.Clear();
+                tilesByPosition.Clear();
+            }
             battles.Clear();
             inbound.Clear();
             sources.Clear();
@@ -92,22 +103,34 @@ namespace Slg
                 inbound[march.TargetTileId] = inbound.GetValueOrDefault(march.TargetTileId) + 1;
                 if (march.Player == world.YourPlayer) hasMarch = true;
             }
+            if (!sameTiles)
+            {
+                mapMin = Vector2.one * float.PositiveInfinity;
+                mapMax = Vector2.one * float.NegativeInfinity;
+                foreach (var tile in world.Tiles)
+                {
+                    tiles[tile.Id] = tile;
+                    tilesByPosition[new Vector2Int(tile.Q, tile.R)] = tile;
+                    Vector2 point = GridPoint(tile);
+                    mapMin = Vector2.Min(mapMin, point);
+                    mapMax = Vector2.Max(mapMax, point);
+                }
+            }
             foreach (var tile in world.Tiles)
             {
-                tiles[tile.Id] = tile;
                 if (tile.Home != 0) continue;
                 if (!battles.ContainsKey(tile.Id) && (tile.Owner == world.YourPlayer ||
                     (tile.Owner != 0 && inbound.ContainsKey(tile.Id)))) continue;
 
-                // 按游戏服的轴坐标判定相邻关系，并预览同一遍历顺序选出的出发地块。
-                foreach (var source in world.Tiles)
+                // 只检查六个邻格，仍按游戏服的地块 ID 顺序选最早的可用出发地。
+                var position = new Vector2Int(tile.Q, tile.R);
+                WorldTile nearest = null;
+                foreach (var neighbor in Neighbors)
                 {
-                    if (source.Owner != world.YourPlayer) continue;
-                    int dq = source.Q - tile.Q, dr = source.R - tile.R;
-                    if (Mathf.Max(Mathf.Abs(dq), Mathf.Max(Mathf.Abs(dr), Mathf.Abs(dq + dr))) != 1) continue;
-                    sources.Add(tile.Id, source);
-                    break;
+                    if (tilesByPosition.TryGetValue(position + neighbor, out var source) && source.Owner == world.YourPlayer &&
+                        (nearest == null || source.Id < nearest.Id)) nearest = source;
                 }
+                if (nearest != null) sources.Add(tile.Id, nearest);
             }
             if (!tiles.ContainsKey(selectedTile)) selectedTile = 0;
         }
@@ -145,17 +168,12 @@ namespace Slg
             Fill(field, Inset);
             if (tiles.Count == 0) return;
 
-            Vector2 min = Vector2.one * float.PositiveInfinity;
-            Vector2 max = Vector2.one * float.NegativeInfinity;
-            foreach (var tile in world.Tiles)
-            {
-                var point = GridPoint(tile);
-                min = Vector2.Min(min, point);
-                max = Vector2.Max(max, point);
-            }
-            Vector2 span = max - min + new Vector2(HexWidth, 2);
+            Vector2 span = mapMax - mapMin + new Vector2(HexWidth, 2);
             float radius = Mathf.Min(98, Mathf.Min((field.width - 28) / span.x, (field.height - 28) / span.y));
-            Vector2 origin = field.center - (min + max) * (radius * 0.5f);
+            if (radius <= 4) return;
+            bool showLabels = radius >= LabelRadius;
+            Vector2 routeOffset = showLabels ? RouteOffset : Vector2.zero;
+            Vector2 origin = field.center - (mapMin + mapMax) * (radius * 0.5f);
             double now = Time.realtimeSinceStartupAsDouble;
             foreach (var tile in world.Tiles)
             {
@@ -167,13 +185,13 @@ namespace Slg
                     locateUntil = 0;
                     Event.current.Use();
                 }
-                DrawTile(tile, center, radius - 2, now);
+                DrawTile(tile, center, radius - 2, now, showLabels);
             }
 
             if (sources.TryGetValue(selectedTile, out var source))
             {
-                var start = origin + GridPoint(source) * radius + RouteOffset;
-                var end = origin + GridPoint(tiles[selectedTile]) * radius + RouteOffset;
+                var start = origin + GridPoint(source) * radius + routeOffset;
+                var end = origin + GridPoint(tiles[selectedTile]) * radius + routeOffset;
                 FillRoute(start, end, new Color(Gold.r, Gold.g, Gold.b, 0.72f), true);
             }
             contestedBadges.Clear();
@@ -186,8 +204,10 @@ namespace Slg
                 // 当前行军固定三秒。倒计时归零后仍保留等待结算提示，直到服务器更新地图。
                 Vector2 flag = Vector2.Lerp(start, end, 0.21f + 0.58f * Mathf.Clamp01(1 - (float)(seconds / MarchSeconds)));
                 Color troopColor = march.Player == world.YourPlayer ? Friendly : Enemy;
-                FillRoute(start + RouteOffset, end + RouteOffset, troopColor, false);
-                DrawFlag(flag + RouteOffset - new Vector2(0, 16), troopColor);
+                FillRoute(start + routeOffset, end + routeOffset, troopColor, false);
+                if (showLabels) DrawFlag(flag + routeOffset - new Vector2(0, 16), troopColor);
+                else DrawHex(flag, 4, troopColor);
+                if (!showLabels && to.Id != selectedTile) continue;
                 string countdown = seconds > 0 ? $"{seconds:0.0} 秒" : march.Hostile ? "等待结算" : "正在抵达";
                 string troops = march.ReinforceBattleId != 0 ? $"援军 {march.Troops}" : $"{march.Troops} 兵";
                 if (inbound[march.TargetTileId] > 1)
@@ -198,13 +218,14 @@ namespace Slg
                 }
                 else
                 {
-                    DrawBadge(flag + RouteOffset, troops, troopColor, march.ReinforceBattleId != 0 ? 68 : 55);
+                    DrawBadge(flag + routeOffset, troops, troopColor, march.ReinforceBattleId != 0 ? 68 : 55);
                     DrawBadge(end + new Vector2(0, 33), countdown, troopColor, 76);
                 }
             }
             foreach (var contest in contestedBadges) DrawBadge(contest.Center, contest.Text, contest.Team, 92);
             foreach (var tile in world.Tiles)
             {
+                if (!showLabels && tile.Id != selectedTile) continue;
                 if (inbound.ContainsKey(tile.Id) || !notices.TryGetValue(tile.Id, out var notice)) continue;
                 double age = now - notice.Start;
                 if (age >= NoticeSeconds) continue;
@@ -218,7 +239,7 @@ namespace Slg
             DrawLegend(area.x + 241, legend, Gold, "相邻目标");
         }
 
-        private void DrawTile(WorldTile tile, Vector2 center, float radius, double now)
+        private void DrawTile(WorldTile tile, Vector2 center, float radius, double now, bool showLabels)
         {
             bool friendly = tile.Owner == world.YourPlayer;
             bool selected = selectedTile == tile.Id;
@@ -235,7 +256,13 @@ namespace Slg
             }
             DrawHex(center + new Vector2(0, 4), radius, Inset);
             DrawHex(center, radius, edge);
-            DrawHex(center, radius - (selected ? 3.5f : 1.5f), face);
+            DrawHex(center, Mathf.Max(1, radius - (selected ? 3.5f : 1.5f)), face);
+            if (!showLabels)
+            {
+                if (battles.ContainsKey(tile.Id)) DrawHex(center, 4, Gold);
+                else if (tile.Home != 0) DrawHex(center, 4, team);
+                return;
+            }
             if (tile.Owner != 0) DrawFlag(center + new Vector2(0, -29), team);
             string title = tile.Home != 0 ? (friendly ? "己方出生地" : "敌方出生地") : $"地块 {tile.Id}";
             GUI.Label(new Rect(center.x - 52, center.y - 15, 104, 24), title, centered);
