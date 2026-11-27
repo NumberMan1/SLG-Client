@@ -12,6 +12,11 @@ namespace Slg
     {
         [SerializeField] private Font displayFont;
         [SerializeField] private Font interfaceFont;
+        [SerializeField] private Texture2D terrainAtlas;
+        [SerializeField] private Texture2D campaignMap;
+        [SerializeField] private Texture2D battlefields;
+        [SerializeField] private Texture2D battleUnits;
+        [SerializeField] private Camera loginCamera;
 
         private string gateway = GatewayHealth.DefaultGatewayUrl;
         private string account = "demo";
@@ -24,6 +29,7 @@ namespace Slg
         private GatewayConnection connection;
         private WorldSnapshot world;
         private WorldView worldView;
+        private int loginPreviewLayers;
         private const int BattleReportLimit = 8;
         private readonly List<WorldBattleReport> battleReports = new(BattleReportLimit);
         private int battleReportIndex;
@@ -56,7 +62,8 @@ namespace Slg
             gateway = Environment.GetEnvironmentVariable("SLG_CLIENT_GATEWAY_URL") ?? gateway;
 #endif
             account = Environment.GetEnvironmentVariable("SLG_DEMO_ACCOUNT") ?? account;
-            worldView = new WorldView(interfaceFont);
+            loginPreviewLayers = loginCamera.cullingMask;
+            worldView = new WorldView(interfaceFont, terrainAtlas, campaignMap, battlefields, battleUnits);
         }
 
         private void OnDestroy()
@@ -232,8 +239,7 @@ namespace Slg
                 battleReports.Clear();
                 battleReportIndex = 0;
             }
-            if (changed || reply.Result == WorldResult.Full || snapshot != null) world = snapshot;
-            worldView.ApplySnapshot(world);
+            if (changed || reply.Result == WorldResult.Full || snapshot != null) SetWorld(snapshot);
             if (world != null)
             {
                 if (reply.HasAvailableTroops) world.AvailableTroops = reply.AvailableTroops;
@@ -307,13 +313,23 @@ namespace Slg
             var opened = connection;
             connection = null;
             opened.Dispose();
-            world = null;
-            worldView.ApplySnapshot(null);
+            SetWorld(null);
             battleReports.Clear();
             battleReportIndex = 0;
             if (!keepPendingMarch) pendingMarch = null;
             failed = false;
             status = "连接已关闭";
+        }
+
+        private void SetWorld(WorldSnapshot snapshot)
+        {
+            if ((world == null) != (snapshot == null))
+            {
+                // 玩法界面覆盖整个视口，只保留显示所需的相机，跳过登录地形和阴影的绘制。
+                loginCamera.cullingMask = snapshot == null ? loginPreviewLayers : 0;
+            }
+            world = snapshot;
+            worldView.ApplySnapshot(snapshot);
         }
 
         private void OnGUI()
@@ -324,7 +340,7 @@ namespace Slg
             }
             bool compact = world != null && Screen.width < Screen.height * 1.2f;
             // 窄窗口将面板放到地图下方，地图和面板共用缩放比例。
-            float scale = compact ? Mathf.Min(Screen.width / 720f, Screen.height / 1120f) :
+            float scale = compact ? Mathf.Min(Screen.width / 560f, Screen.height / 1040f) :
                 Mathf.Min(Screen.width / 1280f, Screen.height / 720f);
             float width = Screen.width / scale;
             float height = Screen.height / scale;
@@ -405,28 +421,35 @@ namespace Slg
 
         private void DrawWorld(float width, float height, bool compact)
         {
-            Fill(new Rect(0, 0, width, height), Background);
+            Fill(new Rect(0, 0, width, height), new Color32(13, 18, 18, 255));
+            float headerHeight = compact ? 105 : 74;
+            Fill(new Rect(0, 0, width, headerHeight), new Color32(25, 33, 31, 255));
             Fill(new Rect(0, 0, width, 3), Gold);
-            GUI.Label(new Rect(24, 18, 85, 50), "边境", worldTitle);
-            GUI.Label(new Rect(119, 24, 120, 21), $"玩家 {world.YourPlayer}", eyebrow);
-            GUI.Label(new Rect(119, 45, 270, 24),
+            Fill(new Rect(0, headerHeight - 1, width, 1), new Color32(58, 68, 61, 255));
+            GUI.Label(new Rect(20, 15, 88, 50), "边境", worldTitle);
+            GUI.Label(new Rect(112, 17, 120, 22), $"玩家 {world.YourPlayer}", eyebrow);
+            GUI.Label(new Rect(112, 39, 250, 24),
                 $"预备兵力 {world.AvailableTroops} · 补兵上限 {world.TroopCapacity}", label);
             message.normal.textColor = failed ? new Color(1f, 0.61f, 0.52f) : Muted;
-            GUI.Label(new Rect(398, 26, width - 398 - 143, 48), status, message);
-            if (DrawButton(new Rect(width - 128, 25, 104, 36), "断开连接"))
+            var statusArea = compact ? new Rect(20, 72, width - 40, 28) : new Rect(384, 25, width - 530, 40);
+            GUI.Label(statusArea, status, message);
+            var disconnect = new Rect(width - 126, 19, 106, 36);
+            Fill(disconnect, new Color32(58, 68, 61, 255));
+            if (GUI.Button(disconnect, "断开连接", secondaryButton))
             {
                 Disconnect();
                 return;
             }
 
             double now = serverTimeMs + (Time.realtimeSinceStartupAsDouble - serverTimeReceivedAt) * 1000;
-            var bounds = new Rect(24, 84, width - 48, height - 108);
+            var bounds = new Rect(16, headerHeight + 14, width - 32, height - headerHeight - 30);
             var dispatch = worldView.Draw(bounds, compact, pendingMarch.HasValue, now, battleReports, ref battleReportIndex);
             if (dispatch is { } chosen)
             {
                 var order = new MarchOrder
                 {
                     CommandId = Guid.NewGuid().ToString("N"), TargetTileId = chosen.Target, Troops = chosen.Troops,
+                    TroopType = chosen.Type,
                     ContinuousBattle = chosen.BattleId == 0,
                     ReinforceBattleId = chosen.Retreat ? 0 : chosen.BattleId,
                     RetreatBattleId = chosen.Retreat ? chosen.BattleId : 0
